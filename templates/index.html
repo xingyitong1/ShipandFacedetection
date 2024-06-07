@@ -23,7 +23,7 @@
                                             <i class="fas fa-book f-40 text-c-blue "></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="f-w-300" id="speed-heading">航速</h3>
+                                            <h3 class="f-w-300" id="speed-heading" style="font-size: 20px">航速</h3>
                                             <span class="d-block text-uppercase" id="heading-span">航向</span>
                                         </div>
                                     </div>
@@ -191,7 +191,7 @@
                                             <h3 class="mt-2 f-w-300">
                                                 {{ new_members_thisweek }}
                                                 <sub class="text-muted f-15">
-                                                    <span id="violation-count">0</span> 次违规
+                                                    <span id="violation-count">0</span> 次疲劳
                                                 </sub>
                                             </h3>
                                             <span class="d-block text-uppercase">1h内</span>
@@ -252,14 +252,14 @@
             var heading = getRandomHeading();
             totalDistance += speed * (intervalInSeconds / 3600); // 将速度转换为小时单位后累加到总距离
 
-            document.getElementById("speed-heading").innerText = speed.toFixed(1) + " kn/h";
-            document.getElementById("heading-span").innerText = heading + " °";
+            document.getElementById("speed-heading").innerText = "速度："+speed.toFixed(1) + " kn/h";
+            document.getElementById("heading-span").innerText = "方向"+heading + " °";
             document.getElementById("distance-span").innerText = totalDistance.toFixed(2) + " 海里";
             if (speed >= 45) {
-                violationCount++;
+                {#violationCount++;#}
                 overspeedCount++;
-                document.getElementById("violation-count").innerText = violationCount + " 次违规";
-                document.getElementById("overspeed-count").innerText = overspeedCount + " 次超速";
+                {#document.getElementById("violation-count").innerText = violationCount ;#}
+                document.getElementById("overspeed-count").innerText = overspeedCount ;
             }
         }
 
