@@ -20,11 +20,11 @@
                                 <div class="card-block">
                                     <div class="row d-flex align-items-center">
                                         <div class="col-auto">
-                                            <i class="fas fa-book f-40 text-c-blue "></i>
+                                            <i class="fas fa-anchor f-40 text-c-blue "></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="f-w-300" id="speed-heading" style="font-size: 20px">航速</h3>
-                                            <span class="d-block text-uppercase" id="heading-span">航向</span>
+                                            <h3 class="f-w-300" id="speed-heading"></h3>
+                                            <span class="d-block text-uppercase">航速</span>
                                         </div>
                                     </div>
                                 </div>
@@ -36,11 +36,11 @@
                                 <div class="card-block">
                                     <div class="row d-flex align-items-center">
                                         <div class="col-auto">
-                                            <i class="fas fa-user-friends f-40 " style="color:coral"></i>
+                                            <i class="fas fa-arrows-alt f-40 text-c-purple"></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="f-w-300">无异常</h3>
-                                            <span class="d-block text-uppercase">驾驶员状态</span>
+                                            <h3 class="f-w-300" id="heading-span"></h3>
+                                            <span class="d-block text-uppercase">航向</span>
                                         </div>
                                     </div>
                                 </div>
@@ -52,11 +52,11 @@
                                 <div class="card-block">
                                     <div class="row d-flex align-items-center">
                                         <div class="col-auto">
-                                            <i class="fas fa-cubes f-40 text-c-purple"></i>
+                                            <i class="fas fa-user-friends f-40 " style="color:coral"></i>
                                         </div>
                                         <div class="col">
                                             <h3 class="f-w-300">无异常</h3>
-                                            <span class="d-block text-uppercase">货物状态</span>
+                                            <span class="d-block text-uppercase">驾驶员状态</span>
                                         </div>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@
                                     </div>
                                     <h2 class="mt-3 f-w-300">
                                         <span class="d-block" id="distance-span">0</span>
-                                        <sub class="text-muted f-14">海里</sub>
+                                        <sub class="text-muted f-14"></sub>
                                     </h2>
                                     <h6 class="text-muted mt-4 mb-0">安全人人抓，幸福千万家。</h6>
                                     <i class="fab fa-angellist text-c-purple f-50"></i>
@@ -237,13 +237,23 @@
         var overspeedCount = 0;
         var violationCount = 0;
 
-        // 随机生成航速和航向的函数
+        var currentSpeed = 14.0; // 初始化航速
+        var currentHeading = 182; // 初始化航向
+
+        // 随机生成航速的函数，确保每秒钟变化不超过0.3，且范围在13.5到15.0之间
         function getRandomSpeed() {
-            return Math.random() * 20 + 30; // 随机生成10到30之间的航速
+            var speedChange = (Math.random() * 0.6) - 0.3; // 生成-0.3到0.3之间的变化量
+            currentSpeed += speedChange;
+            currentSpeed = Math.max(13.5, Math.min(15.0, currentSpeed)); // 限制在13.5到15.0之间
+            return currentSpeed;
         }
 
+        // 随机生成航向的函数，确保每秒钟变化不超过2，且范围在180到185之间
         function getRandomHeading() {
-            return Math.floor(Math.random() * 10 + 180); // 随机生成0到359之间的航向
+            var headingChange = (Math.random() * 4) - 2; // 生成-2到2之间的变化量
+            currentHeading += headingChange;
+            currentHeading = Math.max(180, Math.min(185, currentHeading)); // 限制在180到185之间
+            return Math.floor(currentHeading);
         }
 
         // 更新航速、航向和累计航程的函数
@@ -252,14 +262,14 @@
             var heading = getRandomHeading();
             totalDistance += speed * (intervalInSeconds / 3600); // 将速度转换为小时单位后累加到总距离
 
-            document.getElementById("speed-heading").innerText = "速度："+speed.toFixed(1) + " kn/h";
-            document.getElementById("heading-span").innerText = "方向"+heading + " °";
+            document.getElementById("speed-heading").innerText = speed.toFixed(1) + " 节";
+            document.getElementById("heading-span").innerText = heading + " °";
             document.getElementById("distance-span").innerText = totalDistance.toFixed(2) + " 海里";
-            if (speed >= 45) {
-                {#violationCount++;#}
+            if (speed >= 100) {
+                violationCount++;
                 overspeedCount++;
-                {#document.getElementById("violation-count").innerText = violationCount ;#}
-                document.getElementById("overspeed-count").innerText = overspeedCount ;
+                document.getElementById("violation-count").innerText = violationCount;
+                document.getElementById("overspeed-count").innerText = overspeedCount;
             }
         }
 
