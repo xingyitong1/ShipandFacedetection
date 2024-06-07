@@ -1,0 +1,114 @@
+{% load book_extras %}
+    <nav class="pcoded-navbar">
+        <div class="navbar-wrapper">
+            <div class="navbar-brand header-logo">
+                <a target="_blank" 
+                   href="" class="b-brand">
+                    <div class="b-bg">
+                        <i class="feather icon-trending-up"></i>
+                    </div>
+                    <span class="b-title">船舶管理系统</span>
+                </a>
+                <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+            </div>
+            <div class="navbar-content scroll-div">
+                <ul class="nav pcoded-inner-navbar">
+                    <li 
+                        class="nav-item {% if 'index' in segment %} active {% endif %}">
+                        <a href="/" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">船舶状态</span></a>
+                    </li>
+                    
+                    <!-- 各监控模块 -->
+                    <li class="nav-item pcoded-menu-caption">
+                        <label>监控与预警</label>
+                    </li>
+                    <li class="nav-item pcoded-hasmenu">
+                        <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-box"></i></span><span class="pcoded-mtext">驾驶位预警</span></a>
+                    </li>
+
+                        <!-- 周围船只监控 -->
+{#                    {% url 'category_list' as category_list %}#}
+{#                    {% url 'category_create' as category_create %}#}
+{#                    {% url 'category_delete' as category_delete %}#}
+                    <li class="nav-item pcoded-hasmenu ">
+                        <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-box"></i></span><span class="pcoded-mtext">周围船只预警</span></a>
+{#                        <ul class="pcoded-submenu">#}
+{#                            <li class=""><a href="{% url 'category_list' %}" class="">All Categories</a></li>#}
+{#                            <li class=""><a href="{% url 'category_create' %}" class="">Add Category</a></li>#}
+{#                        </ul>#}
+                    </li>
+
+                        <!-- 作业区域监控 -->
+                    <li class="nav-item pcoded-hasmenu ">
+                        <a href="javascript:" class="nav-link "><span class="pcoded-micon"><i class="feather icon-box"></i></span><span class="pcoded-mtext">作业区域预警</span></a>
+{#                        <ul class="pcoded-submenu">#}
+{#                            <li class=""><a href="{% url 'publisher_list' %}" >All Publishers</a></li>#}
+{#                            <li class=""><a href="{% url 'publisher_create' %}" >Add Publisher</a></li>#}
+{#                        </ul>#}
+                    </li>
+
+
+{#                   #}
+{#                    <!-- User Logs -->#}
+{#   #}
+{#                    {% url 'profile_create' as profile_create %}#}
+{#                    <li class="nav-item pcoded-menu-caption">#}
+{#                        <label>User Admin</label>#}
+{#                    </li>#}
+{#                    {% if request.user.profile.id %}#}
+{#                    <li  class="nav-item {% if request.resolver_match.url_name == 'profile_detail' %} active  {% endif %}">#}
+{#                        <a href="{% url 'profile_detail' request.user.profile.id %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">My Profile</a>#}
+{#                    </li>#}
+{#                    <li  class="nav-item {% if request.resolver_match.url_name == 'profile_update' %} active {% endif %}">#}
+{#                        <a href="{% url 'profile_update' request.user.profile.pk %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Update Profile</a>#}
+{#                    </li>#}
+{#                    {% else %}#}
+{#                    <li  class="nav-item {% if request.resolver_match.url_name == 'profile_create' %} active  {% endif %}">#}
+{#                        <a href="{% url 'profile_create' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Create Profile</a>#}
+{#                    </li>#}
+{##}
+{#                    {% endif %}#}
+{##}
+{##}
+{#                    {% if request.user|has_group:"logs" %}#}
+{#                    <li  class="nav-item {% if request.resolver_match.url_name == 'user_activity_list' %} active {% endif %} {% if request.resolver_match.url_name == 'user_activity_delete' %} active {% endif %}">#}
+{#                        <a href="{% url 'user_activity_list' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Logs</a>#}
+{#                    </li>#}
+{#                    {% endif %}#}
+{##}
+{#                    {% if request.user|has_group:"download_data" %}#}
+{#                    <li  class="nav-item {% if request.resolver_match.url_name == 'data_center' %} active {% endif %}">#}
+{#                        <a href="{% url 'data_center' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Data Center</a>#}
+{#                    </li>#}
+{#                    {% endif %}#}
+{##}
+{#                    #}
+{#                    {% if request.user|has_group:"api" %}#}
+{#                    <li  class="nav-item {% if request.resolver_match.url_name == 'api-overview' %} active {% endif %}">#}
+{#                        <a href="{% url 'api-overview' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">API</a>#}
+{#                    </li>#}
+{#                    {% endif %}#}
+{##}
+{#                    {% if request.user.is_superuser %}#}
+{#                    <li  class="nav-item {% if request.resolver_match.url_name == 'employees_list' %} active {% endif %}">#}
+{#                        <a href="{% url 'employees_list' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Employees</a>#}
+{#                    </li>#}
+{#                    {% endif %}#}
+{##}
+{#                    <!-- Form Table -->#}
+{#                    <!-- <li class="nav-item pcoded-menu-caption">#}
+{#                        <label>Forms & table</label>#}
+{#                    </li>#}
+{#                    <li data-username="form elements advance componant validation masking wizard picker select" #}
+{#                        class="nav-item {% if 'ui-forms' in segment %} active {% endif %}">#}
+{#                        <a href="/ui-forms.html" class="nav-link "><span class="pcoded-micon"><i class="feather icon-file-text"></i></span><span class="pcoded-mtext">Form elements</span></a>#}
+{#                    </li>#}
+{#                    <li data-username="Table bootstrap datatable footable" #}
+{#                        class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">#}
+{#                        <a href="/ui-tables.html" class="nav-link "><span class="pcoded-micon"><i class="feather icon-server"></i></span><span class="pcoded-mtext">Table</span></a>#}
+{#                    </li> -->#}
+
+                </ul>
+            </div>
+        </div>
+    </nav>
