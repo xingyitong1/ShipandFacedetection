@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% load book_extras %}
-{% block title %} Dashboard {% endblock %} 
+{% block title %} Dashboard {% endblock %}
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -11,7 +11,7 @@
         <div class="pcoded-inner-content">
 
             <div class="main-body">
-                <br>                
+                <br>
                 <div class="page-wrapper">
                     <div class="row">
                         <!--  Count Books  -->
@@ -50,27 +50,27 @@
                         </div>
                         <!-- Count Categories -->
                         <div class='col-md-3'>
-                        <div class="card">
-                            <div class="card-block">
-                                <div class="row d-flex align-items-center">
-                                    <div class="col-auto">
-                                        <i class="fas fa-cubes f-40 text-c-purple"></i>
-                                    </div>
-                                    <div class="col">
-                                        <h3 class="f-w-300">无异常</h3>
-                                        <span class="d-block text-uppercase">货物状态</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <!-- Count Publishers -->
-                        <div class='col-md-3'>                    
                             <div class="card">
                                 <div class="card-block">
                                     <div class="row d-flex align-items-center">
                                         <div class="col-auto">
-                                            <i class=" feather icon-file-text f-40 text-c-green"></i>                                
+                                            <i class="fas fa-cubes f-40 text-c-purple"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h3 class="f-w-300">无异常</h3>
+                                            <span class="d-block text-uppercase">货物状态</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Count Publishers -->
+                        <div class='col-md-3'>
+                            <div class="card">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-auto">
+                                            <i class=" feather icon-file-text f-40 text-c-green"></i>
                                         </div>
                                         <div class="col">
                                             <h3 class="f-w-300">无异常</h3>
@@ -87,38 +87,98 @@
                                 <div class="card-header">
                                     <h5>航行日志</h5>
                                 </div>
-                                <div class="card-block px-0 py-3">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover ">
-                                            <thead class="">
-                                                <tr>
-                                                    <th>时间</th>
-                                                    <th>航向与航速</th>
-                                                    <th>驾驶员状态</th>
-                                                    <th>货物状态</th>
-                                                    <!-- <th>On Time ?</th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-{#                                                {% for r in new_closed_records %}#}
-{#                                                <tr class="unread">#}
-{#                                                 <td>#}
-{#                                                        <p class="mb-1"><a href="{% url 'record_detail' r.pk %}">{{ r.borrower}}</a></p>#}
-{#                                                        <p class="m-0"><i class="fas fa-credit-card" style="color: Tomato;"></i>&nbsp;{{r.borrower_card}}&nbsp;&nbsp;<i class="fas fa-mobile" style="color: cornflowerblue;"></i>&nbsp;{{r.borrower_phone_number}}</p>#}
-{#                                                 </td>#}
-{#                                                    <td>{{r.book |truncatewords:2}}</td>#}
-{#                                                    <td>{{r.start_day|date:"Y/m/d" }} - {{r.end_day|date:"Y/m/d" }} </td>#}
-{#                                                    <td>{{r.closed_at | timesince}}</td>#}
-{#                                                    <!-- <td>{{r.return_status}}</td> -->#}
-{#                                                </tr>#}
-{#                                                {% endfor %}#}
-                                            
-                                            </tbody>
-                                        </table>
+                                <!-- 添加两个框，一个可以显示图片，另一个显示处理后的图片。再添加两个按钮，一个按鈕用来给第一个框选择图片，第二个按钮用于预测-->
+                                
+                                <div class="card-body">
+                                    <div class="image-container">
+                                        <img id="selected-image" src="#" alt="Selected Image" class="img-rounded">
+                                    </div>
+                                    <div class="processed-image-container">
+                                        <img id="processed-image" src="#" alt="Processed Image" class="img-rounded">
+                                    </div>
+                                    <div class="button-container">
+                                        <button id="select-image-button" class="btn">选择图片 </button>
+                                        <button id="predict-button" class="btn">预测</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- 加的脚本文件选择图片-->
+                        <script>
+                            function method1(selectedImageSrc) {
+                                return selectedImageSrc;
+                            }
+
+                            // Wait for the DOM to be fully loaded
+                            document.addEventListener("DOMContentLoaded", function () {
+                                // Get references to the buttons and image elements
+                                var selectImageButton = document.getElementById("select-image-button");
+                                var predictButton = document.getElementById("predict-button");
+                                var selectedImage = document.getElementById("selected-image");
+                                var processedImage = document.getElementById("processed-image");
+
+                                // Add click event listener for the select image button
+                                selectImageButton.addEventListener("click", function () {
+                                    // Create a file input element
+                                    var input = document.createElement('input');
+                                    input.type = 'file';
+                                    input.accept = 'image/*'; // Accept only image files
+
+                                    // Trigger the click event on the file input element
+                                    input.click();
+
+                                    // Add change event listener to the file input element
+                                    input.addEventListener('change', function () {
+                                        var file = input.files[0]; // Get the selected file
+                                        var reader = new FileReader(); // Create a file reader
+
+                                        // Set up the file reader to read the selected file
+                                        reader.onload = function (event) {
+                                            selectedImage.src = event.target.result; // Set the selected image source
+                                        };
+
+                                        // Read the selected file as a data URL (base64 encoded)
+                                        reader.readAsDataURL(file);
+                                        processedImage.src = null;
+                                    });
+                                });
+
+                                // Add click event listener for the predict button
+                                predictButton.addEventListener("click", function () {
+                                    // Simulate processing the selected image and displaying the result
+                                    var selectedImageSrc = selectedImage.src;
+
+                                    // 调用 method1 函数进行处理
+                                    // 将处理后的图片展示出来
+                                    processedImage.src = method1(selectedImageSrc);
+                                    //
+                                    {#// 获取选择的图片#}
+                                    {#var selectedImageSrc = selectedImage.src;#}
+                                    {##}
+                                    {#// 发送异步请求将图像发送给后端#}
+                                    {#var xhr = new XMLHttpRequest();#}
+                                    {#xhr.open("POST", "/your-backend-endpoint", true);#}
+                                    {#xhr.setRequestHeader("Content-Type", "application/json");#}
+                                    {##}
+                                    {#// 处理后端响应#}
+                                    {#xhr.onload = function () {#}
+                                    {#    if (xhr.status === 200) {#}
+                                    {#        // 获取后端处理后的图像路径#}
+                                    {#        var processedImageSrc = JSON.parse(xhr.responseText).processedImageSrc;#}
+                                    {##}
+                                    {#        // 将处理后的图片展示出来#}
+                                    {#        processedImage.src = processedImageSrc;#}
+                                    {#    } else {#}
+                                    {#        console.error('请求失败: ' + xhr.statusText);#}
+                                    {#    };#}
+                                    {##}
+                                    {#// 发送图像数据给后端#}
+                                    {#xhr.send(JSON.stringify({imageSrc: selectedImageSrc}));#}
+
+                                });
+                            });
+                        </script>
+                        <!-- 加的脚本文件选择图片-->
 
                         <div class="col-xl-4 col-md-6">
                             <div class="card card-event">
@@ -145,7 +205,8 @@
                                             <i class="fas fa-user f-30 " style="color:coral"></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="mt-2 f-w-300">{{new_members_thisweek}} <sub class="text-muted f-15 ">次违规</sub></h3>
+                                            <h3 class="mt-2 f-w-300">{{ new_members_thisweek }} <sub
+                                                    class="text-muted f-15 ">次违规</sub></h3>
                                             <span class="d-block text-uppercase">1h内</span>
                                         </div>
                                     </div>
@@ -157,14 +218,15 @@
                                             <i class="fas fa-book f-30 text-c-blue "></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="mt-2 f-w-300">{{lent_books_thisweek}} <sub class="text-muted f-15 ">次超速</sub></h3>
+                                            <h3 class="mt-2 f-w-300">{{ lent_books_thisweek }} <sub
+                                                    class="text-muted f-15 ">次超速</sub></h3>
                                             <span class="d-block text-uppercase">1h内</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
- 
+
                         <!-- <div class="col-xl-4 col-md-6">
                             <div class="card user-list">
                                 <div class="card-header">
@@ -207,150 +269,17 @@
                             </div>
                         </div> -->
                         <div class="col-xl-12 col-md-12 m-b-30">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>监控总览</h5>
-                            </div>
-                            <div class="card-block ">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link " id="home-tab" data-toggle="tab" href="#new_member" role="tab" aria-controls="home" aria-selected="false">驾驶位</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link " id="profile-tab" data-toggle="tab" href="#stock" role="tab" aria-controls="profile" aria-selected="false">周围船只</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#logs" role="tab" aria-controls="contact" aria-selected="false">作业区域</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" id="myTabContent">
-                                    <!-- New members -->
-                                    <div class="tab-pane fade " id="new_member" role="tabpanel" aria-labelledby="home-tab">
-                                        <table class="table table-hover">
-{#                                            <thead>#}
-{#                                                <tr>#}
-{#                                                    <th>Name</th>#}
-{#                                                    <th>Sex</th>#}
-{#                                                    <th>Age</th>#}
-{#                                                    <th>Card N </th>#}
-{#                                                    <th>Joined at</th>#}
-{#                                                    <th>Created by</th>#}
-{#                                                    <th class="text-right"></th>#}
-{#                                                </tr>#}
-{#                                            </thead>#}
-{#                                            <tbody>#}
-{#                                                {% for member in new_members %}#}
-{#                                                <tr>#}
-{#                                                    <td><a href="{% url 'member_detail' member.pk %}">{{member.name}}</a></td>#}
-{#                                                    {% if member.gender == 'm' %}#}
-{#                                                    <td><i class="fas fa-mars "></i></td>#}
-{#                                                    {% else %}#}
-{#                                                    <td><i class="fas fa-venus"></i></td>#}
-{#                                                    {% endif %}#}
-{#                                                    <td>{{member.age}}</td>     #}
-{#                                                    <td>{{member.card_number}}</td>  #}
-{#                                                    <td>{{member.created_at| timesince}}</td>#}
-{#                                                    <td>{{member.created_by}}</td>                     #}
-{#         #}
-{#                                                </tr>#}
-{#    #}
-{#                                                {% endfor %}#}
-{#      #}
-{#    #}
-{#     #}
-{#                                            </tbody>#}
-                                        </table>
-    
-                                    </div>
-                                    <!-- Book inventory -->
-                                    <div class="tab-pane fade " id="stock" role="tabpanel" aria-labelledby="profile-tab">
-                                        <table class="table table-hover">
-{#                                            <thead>#}
-{#                                                <tr>#}
-{#                                                    <th>Title</th>#}
-{#                                                    <th>Author</th>#}
-{#                                                    <th>Quantity</th>#}
-{#                                                    <th>Location</th>#}
-{#                                                    <th class="text-right"></th>#}
-{#                                                </tr>#}
-{#                                            </thead>#}
-{#                                            <tbody>#}
-{##}
-{#                                                {% for book in short_inventory %}#}
-{#                                                <tr>#}
-{#                                                    <td><a href="{% url 'book_detail' book.pk %}">{{book.title}}</a></td>#}
-{#                                                    <td>{{book.author}}</td>#}
-{#                                                    <td>{{book.quantity}}</td>     #}
-{#                                                    <td>{{book.floor_number}}{{book.bookshelf_number}}</td>                       #}
-{#                                                    {% if book.quantity < 5 %}#}
-{#                                                    <td class="text-center"><i class="fas fa-exclamation-circle text-c-red f-20"></i></td>#}
-{#                                                    {% elif  book.quantity > 5 and book.quantity <= 10 %}#}
-{#                                                    <td class="text-center"><i class="fas fa-exclamation-circle text-c-purple f-20"></i></td>#}
-{#                                                    {% endif %}#}
-{#                                                </tr>#}
-{##}
-{#                                                {% endfor %}#}
-{#                                            </tbody>#}
-                                        </table>
-    
-                                    </div>
-                                    <!-- Recent Logs -->
-                                    <div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="contact-tab">
-                                        <table class="table table-hover">
-{#                                            <thead>#}
-{#                                                <tr>#}
-{#                                                    <th>User</th>#}
-{#                                                    <th>Activity</th>#}
-{#                                                    <th>At</th>#}
-{#                                                    <th>Type</th>#}
-{#                                                    <th class="text-right"></th>#}
-{#                                                </tr>#}
-{#                                            </thead>#}
-{#                                            <tbody>#}
-{#                                                {% for log in recent_user_activities %}#}
-{#                                                    <tr>   #}
-{#                                                        <td><img class="rounded-circle  m-r-10" style="width:30px;" src="{{user_avatar|get_item:log.created_by}}" >{{log.created_by}}</td>#}
-{#                                                        <td> {{log.detail}} </td>#}
-{#                                                        <!-- <td>{{log.created_at |date:"Y-m-d"}}</td> -->#}
-{#                                                        <td>{{ log.created_at | timesince }}</td>#}
-{#                                                        <td>{{log.get_operation_type_display}} </td>#}
-{#    #}
-{#                                                        {% ifequal log.operation_type "success" %}#}
-{#                                                            <td class="text-right"><i class="fas fa-circle text-c-green f-10"></i></td>#}
-{#                                                        {% endifequal %}#}
-{#    #}
-{#                                                        {% ifequal log.operation_type "warning" %}#}
-{#                                                            <td class="text-right"><i class="fas fa-circle text-c-yellow f-10"></i></td>#}
-{#                                                        {% endifequal %}#}
-{#    #}
-{#                                                        {% ifequal log.operation_type "danger" %}#}
-{#                                                            <td class="text-right"><i class="fas fa-circle text-c-red f-10"></i></td>#}
-{#                                                        {% endifequal %}#}
-{##}
-{##}
-{#                                                        {% ifequal log.operation_type "info" %}#}
-{#                                                        <td class="text-right"><i class="fas fa-circle text-c-blue f-10"></i></td>#}
-{#                                                    {% endifequal %}#}
-{#    #}
-{#                                                    </tr>#}
-{#    #}
-{#                                                {% endfor %}#}
-{#    #}
-{#       #}
-{#                                            </tbody>#}
-                                        </table>
-                                    </div>
-
-
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>监控总览</h5>
                                 </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock content %}
 
 {% block javascripts %}{% endblock javascripts %}

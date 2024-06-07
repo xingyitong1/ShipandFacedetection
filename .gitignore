@@ -27,3 +27,4 @@ staticfiles/*
 .vscode/symbols.json
 
 */migrations
+*.sqlite3
