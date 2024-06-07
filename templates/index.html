@@ -23,14 +23,12 @@
                                             <i class="fas fa-book f-40 text-c-blue "></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="f-w-300">随机生成一些</h3>
-                                            <span class="d-block text-uppercase">航速与航向</span>
-
+                                            <h3 class="f-w-300" id="speed-heading">航速</h3>
+                                            <span class="d-block text-uppercase" id="heading-span">航向</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <!-- Count Members -->
                         <div class='col-md-3'>
@@ -88,7 +86,6 @@
                                     <h5>航行日志</h5>
                                 </div>
                                 <!-- 添加两个框，一个可以显示图片，另一个显示处理后的图片。再添加两个按钮，一个按鈕用来给第一个框选择图片，第二个按钮用于预测-->
-
                                 <div class="card-body"
                                      style="display: flex ;flex-direction: row;align-items: center ;width: auto;height: auto">
                                     <div class="image-container"
@@ -101,7 +98,6 @@
                                         <img id="processed-image" src="#" alt="Processed Image"
                                              class="img-thumbnail" style="width: auto ; height: auto">
                                     </div>
-
                                     <div class="button-container" style="margin-top: 20px">
                                         <button id="select-image-button" class="btn">选择图片</button>
                                         <button id="predict-button" class="btn">预测</button>
@@ -109,6 +105,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- 加的脚本文件选择图片-->
                         <script>
                             function method1(selectedImageSrc) {
@@ -157,30 +154,6 @@
                                     // 调用 method1 函数进行处理
                                     // 将处理后的图片展示出来
                                     processedImage.src = method1(selectedImageSrc);
-                                    //
-                                    {#// 获取选择的图片#}
-                                    {#var selectedImageSrc = selectedImage.src;#}
-                                    {##}
-                                    {#// 发送异步请求将图像发送给后端#}
-                                    {#var xhr = new XMLHttpRequest();#}
-                                    {#xhr.open("POST", "/your-backend-endpoint", true);#}
-                                    {#xhr.setRequestHeader("Content-Type", "application/json");#}
-                                    {##}
-                                    {#// 处理后端响应#}
-                                    {#xhr.onload = function () {#}
-                                    {#    if (xhr.status === 200) {#}
-                                    {#        // 获取后端处理后的图像路径#}
-                                    {#        var processedImageSrc = JSON.parse(xhr.responseText).processedImageSrc;#}
-                                    {##}
-                                    {#        // 将处理后的图片展示出来#}
-                                    {#        processedImage.src = processedImageSrc;#}
-                                    {#    } else {#}
-                                    {#        console.error('请求失败: ' + xhr.statusText);#}
-                                    {#    };#}
-                                    {##}
-                                    {#// 发送图像数据给后端#}
-                                    {#xhr.send(JSON.stringify({imageSrc: selectedImageSrc}));#}
-
                                 });
                             });
                         </script>
@@ -198,21 +171,29 @@
                                             <label class="label theme-bg2 text-white f-14 f-w-400 float-right">34%</label>
                                         </div>
                                     </div>
-                                    <h2 class="mt-3 f-w-300">45<sub class="text-muted f-14">海里</sub></h2>
-                                    <h6 class="text-muted mt-4 mb-0">安全人人抓，幸福千万家。 </h6>
+                                    <h2 class="mt-3 f-w-300">
+                                        <span class="d-block" id="distance-span">0</span>
+                                        <sub class="text-muted f-14">海里</sub>
+                                    </h2>
+                                    <h6 class="text-muted mt-4 mb-0">安全人人抓，幸福千万家。</h6>
                                     <i class="fab fa-angellist text-c-purple f-50"></i>
                                 </div>
                             </div>
-                            <!-- New members registed this week -->
+
+                            <!-- New members registered this week -->
                             <div class="card">
                                 <div class="card-block border-bottom">
                                     <div class="row d-flex align-items-center">
                                         <div class="col-auto">
-                                            <i class="fas fa-user f-30 " style="color:coral"></i>
+                                            <i class="fas fa-user f-30" style="color:coral"></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="mt-2 f-w-300">{{ new_members_thisweek }} <sub
-                                                    class="text-muted f-15 ">次违规</sub></h3>
+                                            <h3 class="mt-2 f-w-300">
+                                                {{ new_members_thisweek }}
+                                                <sub class="text-muted f-15">
+                                                    <span id="violation-count">0</span> 次违规
+                                                </sub>
+                                            </h3>
                                             <span class="d-block text-uppercase">1h内</span>
                                         </div>
                                     </div>
@@ -221,11 +202,15 @@
                                 <div class="card-block">
                                     <div class="row d-flex align-items-center">
                                         <div class="col-auto">
-                                            <i class="fas fa-book f-30 text-c-blue "></i>
+                                            <i class="fas fa-book f-30 text-c-blue"></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="mt-2 f-w-300">{{ lent_books_thisweek }} <sub
-                                                    class="text-muted f-15 ">次超速</sub></h3>
+                                            <h3 class="mt-2 f-w-300">
+                                                {{ lent_books_thisweek }}
+                                                <sub class="text-muted f-15">
+                                                    <span id="overspeed-count">0</span> 次超速
+                                                </sub>
+                                            </h3>
                                             <span class="d-block text-uppercase">1h内</span>
                                         </div>
                                     </div>
@@ -233,47 +218,6 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col-xl-4 col-md-6">
-                            <div class="card user-list">
-                                <div class="card-header">
-                                    <h5>Rating</h5>
-                                </div>
-                                <div class="card-block">
-                                    <div class="row align-items-center justify-content-center m-b-20">
-                                        <div class="col-6">
-                                            <h2 class="f-w-300 d-flex align-items-center float-left m-0">4.7 <i class="fas fa-star f-10 m-l-10 text-c-yellow"></i></h2>
-                                        </div>
-                                        <div class="col-6">
-                                            <h6 class="d-flex  align-items-center float-right m-0">0.4 <i class="fas fa-caret-up text-c-green f-22 m-l-10"></i></h6>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xl-12">
-                                            <h6 class="align-items-center float-left"><i class="fas fa-star f-10 m-r-10 text-c-yellow"></i>5</h6>
-                                            <h6 class="align-items-center float-right">384</h6>
-                                            <div class="progress m-t-30 m-b-20" style="height: 6px;">
-                                                <div class="progress-bar progress-c-theme" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-   
-                                        <div class="col-xl-12">
-                                            <h6 class="align-items-center float-left"><i class="fas fa-star f-10 m-r-10 text-c-yellow"></i>2</h6>
-                                            <h6 class="align-items-center float-right">1</h6>
-                                            <div class="progress m-t-30  m-b-20" style="height: 6px;">
-                                                <div class="progress-bar progress-c-theme" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-12">
-                                            <h6 class="align-items-center float-left"><i class="fas fa-star f-10 m-r-10 text-c-yellow"></i>1</h6>
-                                            <h6 class="align-items-center float-right">0</h6>
-                                            <div class="progress m-t-30  m-b-20" style="height: 6px;">
-                                                <div class="progress-bar" role="progressbar" style="width:0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="col-xl-12 col-md-12 m-b-30">
                             <div class="card">
                                 <div class="card-header">
@@ -286,6 +230,44 @@
             </div>
         </div>
     </div>
-{% endblock content %}
 
-{% block javascripts %}{% endblock javascripts %}
+    <script>
+        var totalDistance = 0; // 累计航程
+        var intervalInSeconds = 1; // 每次更新的间隔时间（秒）
+        var overspeedCount = 0;
+        var violationCount = 0;
+
+        // 随机生成航速和航向的函数
+        function getRandomSpeed() {
+            return Math.random() * 20 + 30; // 随机生成10到30之间的航速
+        }
+
+        function getRandomHeading() {
+            return Math.floor(Math.random() * 10 + 180); // 随机生成0到359之间的航向
+        }
+
+        // 更新航速、航向和累计航程的函数
+        function updateSpeedAndDistance() {
+            var speed = getRandomSpeed();
+            var heading = getRandomHeading();
+            totalDistance += speed * (intervalInSeconds / 3600); // 将速度转换为小时单位后累加到总距离
+
+            document.getElementById("speed-heading").innerText = speed.toFixed(1) + " kn/h";
+            document.getElementById("heading-span").innerText = heading + " °";
+            document.getElementById("distance-span").innerText = totalDistance.toFixed(2) + " 海里";
+            if (speed >= 45) {
+                violationCount++;
+                overspeedCount++;
+                document.getElementById("violation-count").innerText = violationCount + " 次违规";
+                document.getElementById("overspeed-count").innerText = overspeedCount + " 次超速";
+            }
+        }
+
+        // 每隔 intervalInSeconds 秒更新一次数据
+        setInterval(updateSpeedAndDistance, intervalInSeconds * 1000);
+
+        // 初始调用一次以立即显示数据
+        updateSpeedAndDistance();
+    </script>
+
+{% endblock content %}
