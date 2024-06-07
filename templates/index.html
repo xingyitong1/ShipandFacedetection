@@ -79,32 +79,35 @@
                             </div>
                         </div>
 
-                        <div class="col-xl-8 col-md-6">
-                            <!-- Recent Closed Records -->
+                      <div class="col-xl-8 col-md-6">
                             <div class="card Recent-Users">
                                 <div class="card-header">
-                                    <h5>航行日志</h5>
+                                    <h5>船只检测</h5>
                                 </div>
-                                <!-- 添加两个框，一个可以显示图片，另一个显示处理后的图片。再添加两个按钮，一个按鈕用来给第一个框选择图片，第二个按钮用于预测-->
-                                <div class="card-body"
-                                     style="display: flex ;flex-direction: row;align-items: center ;width: auto;height: auto">
-                                    <div class="image-container"
-                                         style="display: inline-block ;width: auto;height: auto">
-                                        <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail"
-                                             style="width: auto ; height: auto">
+                                <!-- 添加两个框，一个可以显示图片，另一个显示处理后的图片。再添加两个按钮，一个按钮用来给第一个框选择图片，第二个按钮用于预测 -->
+                                <div class="card-body" style="width: auto; height: auto; display: flex; justify-content: center;">
+                                    <!-- 容器1：用于显示选择的图片 -->
+                                    <div class="image-container" style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; margin-right: 20px; text-align: center;">
+                                        <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: contain;">
                                     </div>
-                                    <div class="processed-image-container"
-                                         style="display: inline-block;width: auto;height: auto">
-                                        <img id="processed-image" src="#" alt="Processed Image"
-                                             class="img-thumbnail" style="width: auto ; height: auto">
+                                    <!-- 容器2：用于显示处理后的图片 -->
+                                    <div class="processed-image-container" style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; text-align: center;">
+                                        <img id="processed-image" src="#" alt="Processed Image" class="img-thumbnail" style="width: 100%; height: 100%; object-fit: contain;">
                                     </div>
-                                    <div class="button-container" style="margin-top: 20px">
-                                        <button id="select-image-button" class="btn">选择图片</button>
-                                        <button id="predict-button" class="btn">预测</button>
-                                    </div>
+                                </div>
+                                <!-- 按钮容器 -->
+                                <div class="button-container" style="display: flex; justify-content: center; margin-top: 20px;">
+                                    <!-- 隐藏的文件输入 -->
+                                    <input type="file" id="image-input" name="image" style="display: none;">
+                                    <!-- 选择图片按钮 -->
+                                    <button type="button" id="select-image-button" class="btn">选择图片</button>
+                                    <!-- 开始分析按钮 -->
+                                    <button type="submit" id="predict-button" class="btn">开始分析</button>
                                 </div>
                             </div>
                         </div>
+
+
 
                         <!-- 加的脚本文件选择图片-->
                         <script>
