@@ -87,36 +87,8 @@
                                 <div class="card-header">
                                     <h5>航行日志</h5>
                                 </div>
-                                <div class="card-block px-0 py-3">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover ">
-                                            <thead class="">
-                                                <tr>
-                                                    <th>时间</th>
-                                                    <th>航向与航速</th>
-                                                    <th>驾驶员状态</th>
-                                                    <th>货物状态</th>
-                                                    <!-- <th>On Time ?</th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-{#                                                {% for r in new_closed_records %}#}
-{#                                                <tr class="unread">#}
-{#                                                 <td>#}
-{#                                                        <p class="mb-1"><a href="{% url 'record_detail' r.pk %}">{{ r.borrower}}</a></p>#}
-{#                                                        <p class="m-0"><i class="fas fa-credit-card" style="color: Tomato;"></i>&nbsp;{{r.borrower_card}}&nbsp;&nbsp;<i class="fas fa-mobile" style="color: cornflowerblue;"></i>&nbsp;{{r.borrower_phone_number}}</p>#}
-{#                                                 </td>#}
-{#                                                    <td>{{r.book |truncatewords:2}}</td>#}
-{#                                                    <td>{{r.start_day|date:"Y/m/d" }} - {{r.end_day|date:"Y/m/d" }} </td>#}
-{#                                                    <td>{{r.closed_at | timesince}}</td>#}
-{#                                                    <!-- <td>{{r.return_status}}</td> -->#}
-{#                                                </tr>#}
-{#                                                {% endfor %}#}
-                                            
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                <!--放置两个框用于放置一个图片，再放置一个按钮用于选择图片的按钮-->
+                                
                             </div>
                         </div>
 
