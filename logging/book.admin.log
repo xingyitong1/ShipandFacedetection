@@ -703,3 +703,165 @@ Traceback (most recent call last):
   File "D:\Coding\Anaconda3\envs\py310\lib\json\decoder.py", line 355, in raw_decode
     raise JSONDecodeError("Expecting value", s, err.value) from None
 json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2024-06-07 16:58:46,050 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:01:11,699 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:01:12,434 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:01:29,452 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:01:30,327 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:01:36,884 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:01:37,607 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:01:56,992 django.request 222 ERROR    Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Coding\Python39\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "D:\Coding\Python39\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "D:\Coding\Python39\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Coding\Python39\lib\site-packages\django\views\generic\base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "D:\Coding\Python39\lib\site-packages\django\contrib\auth\mixins.py", line 52, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+  File "D:\Coding\Python39\lib\site-packages\django\views\generic\base.py", line 97, in dispatch
+    return handler(request, *args, **kwargs)
+  File "E:\GithubProjects\ShipandFacedetection\book\views.py", line 104, in get
+    return render(request, self.template_name, self.context)
+  File "D:\Coding\Python39\lib\site-packages\django\shortcuts.py", line 36, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Coding\Python39\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "D:\Coding\Python39\lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\loader_tags.py", line 150, in render
+    return compiled_parent._render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\loader_tags.py", line 188, in render
+    return template.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\library.py", line 214, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+  File "E:\GithubProjects\ShipandFacedetection\book\templatetags\book_extras.py", line 40, in show_weather
+    r = requests.get(url).json()
+  File "D:\Coding\Python39\lib\site-packages\requests\models.py", line 910, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "D:\Coding\Python39\lib\site-packages\simplejson\__init__.py", line 514, in loads
+    return _default_decoder.decode(s)
+  File "D:\Coding\Python39\lib\site-packages\simplejson\decoder.py", line 386, in decode
+    obj, end = self.raw_decode(s)
+  File "D:\Coding\Python39\lib\site-packages\simplejson\decoder.py", line 416, in raw_decode
+    return self.scan_once(s, idx=_w(s, idx).end())
+simplejson.errors.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2024-06-07 17:05:46,891 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:05:47,593 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:06:55,693 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:06:56,553 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:08:36,595 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:08:37,303 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:10:11,335 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:10:12,254 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:10:14,096 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:10:14,777 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:11:17,682 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:11:18,464 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:14:41,946 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\urls.py changed, reloading.
+2024-06-07 17:14:42,654 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:14:59,126 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\groups_permissions.py changed, reloading.
+2024-06-07 17:14:59,874 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:15:46,141 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\urls.py changed, reloading.
+2024-06-07 17:15:46,813 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:16:54,000 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\book\views.py changed, reloading.
+2024-06-07 17:16:54,661 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:17:58,920 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\Api\views.py changed, reloading.
+2024-06-07 17:17:59,551 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:18:06,004 django.request 222 ERROR    Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Coding\Python39\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "D:\Coding\Python39\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "D:\Coding\Python39\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Coding\Python39\lib\site-packages\django\views\generic\base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "D:\Coding\Python39\lib\site-packages\django\contrib\auth\mixins.py", line 52, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+  File "D:\Coding\Python39\lib\site-packages\django\views\generic\base.py", line 97, in dispatch
+    return handler(request, *args, **kwargs)
+  File "E:\GithubProjects\ShipandFacedetection\book\views.py", line 104, in get
+    return render(request, self.template_name, self.context)
+  File "D:\Coding\Python39\lib\site-packages\django\shortcuts.py", line 36, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Coding\Python39\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "D:\Coding\Python39\lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\loader_tags.py", line 150, in render
+    return compiled_parent._render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\loader_tags.py", line 188, in render
+    return template.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 173, in render
+    return self._render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\defaulttags.py", line 309, in render
+    return nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\defaulttags.py", line 309, in render
+    return nodelist.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 937, in render
+    bit = node.render_annotated(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\base.py", line 904, in render_annotated
+    return self.render(context)
+  File "D:\Coding\Python39\lib\site-packages\django\template\defaulttags.py", line 443, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Coding\Python39\lib\site-packages\django\urls\base.py", line 90, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "D:\Coding\Python39\lib\site-packages\django\urls\resolvers.py", line 673, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'profile_create' not found. 'profile_create' is not a valid view function or pattern name.
+2024-06-07 17:19:41,264 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\comment\views.py changed, reloading.
+2024-06-07 17:19:41,909 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:19:48,906 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\comment\urls.py changed, reloading.
+2024-06-07 17:19:49,540 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
+2024-06-07 17:20:56,788 django.utils.autoreload 217 INFO     E:\GithubProjects\ShipandFacedetection\core\settings.py changed, reloading.

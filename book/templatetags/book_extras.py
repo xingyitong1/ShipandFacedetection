@@ -1,6 +1,5 @@
 from django import template
 from django.db.models.aggregates import Count
-from ..models import UserActivity
 from django.utils import timezone
 import math
 import datetime
@@ -35,48 +34,45 @@ def param_replace(context, **kwargs):
     return d.urlencode()
 
 @register.inclusion_tag('book/inclusions/_weather.html',takes_context=True)
+# def show_weather(context):
+#     url = 'http://api.openweathermap.org/data/2.5/weather?q=Chongqing,cn&units=metric&appid=2e37fd2364d867821f298280137eecc0'
+#     r = requests.get(url).json()
+#     chongqing_weather={}
+#
+#     if r['cod']==200:
+#         chongqing_weather = {
+#             'city': 'Chongqing',
+#             'temperature': float("{0:.2f}".format(r['main']['temp'])),
+#             'description': r['weather'][0]['description'],
+#             'icon': r['weather'][0]['icon'],
+#             'country': r['sys']['country']
+#         }
+#
+#     return {'chongqing_weather':chongqing_weather}
 def show_weather(context):
     url = 'http://api.openweathermap.org/data/2.5/weather?q=Chongqing,cn&units=metric&appid=2e37fd2364d867821f298280137eecc0'
-    r = requests.get(url).json()
-    paris_weather={}
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # 检查请求是否成功
+        weather_data = response.json()
+    except requests.RequestException as e:
+        # 处理请求异常
+        print(f"请求失败: {e}")
+        weather_data = None
+    except ValueError as e:
+        # 处理JSON解析错误
+        print(f"JSON解析失败: {e}")
+        weather_data = None
 
-    if r['cod']==200:
-        paris_weather = {
+    chongqing_weather = {}
+
+    if weather_data and weather_data.get('cod') == 200:
+        chongqing_weather = {
             'city': 'Chongqing',
-            'temperature': float("{0:.2f}".format(r['main']['temp'])),
-            'description': r['weather'][0]['description'],
-            'icon': r['weather'][0]['icon'],
-            'country': r['sys']['country']
+            'temperature': float("{0:.2f}".format(weather_data['main']['temp'])),
+            'description': weather_data['weather'][0]['description'],
+            'icon': weather_data['weather'][0]['icon'],
+            'country': weather_data['sys']['country']
         }
 
-    return {'paris_weather':paris_weather}
-
-
-@register.filter(name='timesince')
-def timesince(date):
-    now = timezone.now()
-    diff = now - date
-
-    if diff.days == 0 and diff.seconds >= 0 and diff.seconds < 60:
-        return ' just now'
-    if diff.days == 0 and diff.seconds >= 60 and diff.seconds < 3600:
-        return str(math.floor(diff.seconds / 60)) + " minutes ago"
-    if diff.days == 0 and diff.seconds >= 3600 and diff.seconds < 86400:
-        return str(math.floor(diff.seconds / 3600)) + " hours ago"
-    if diff.days == 1 and diff.days < 30:
-        return str(diff.days) + " day ago"
-    if diff.days >= 1 and diff.days < 30:
-        return str(diff.days) + " days ago"
-    if diff.days >= 30 and diff.days < 365:
-        return str(math.floor(diff.days / 30)) + " months ago"
-    if diff.days >= 365:
-        return str(math.floor(diff.days / 365)) + " years ago"
-
-@register.filter('has_group')
-def has_group(user, group_name):
-    groups = user.groups.all().values_list('name', flat=True)
-    return True if group_name in groups else False
-
-@register.filter
-def get_item(dictionary, key):
-    return dictionary.get(key)
+    return {'chongqing_weather': chongqing_weather}

@@ -1,4 +1,4 @@
-from .models import Book,Category,Publisher,UserActivity,Profile,Member,BorrowRecord
+from .models import Profile
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
@@ -6,9 +6,6 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse
-
-
-user_groups = ['logs','api','download_data']
 
 
 def check_superuser(user):

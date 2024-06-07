@@ -33,14 +33,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'book',
-    'crispy_forms',
-    'crispy_tailwind',
-    'phonenumber_field',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
     'ckeditor',
-    'comment',
     'notifications',
     'flatpickr',
     ]
@@ -168,52 +164,6 @@ USE_I18N = False
 USE_L10N = True
 USE_TZ = True
 
-
-LOGGING_DIR = os.path.join(BASE_DIR, 'logging')
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'simple': {
-            'format': '%(asctime)s %(name)-12s %(lineno)d %(levelname)-8s %(message)s',
-        },
-    },
-    'handlers': {
-        "console": {
-            'class': "logging.StreamHandler",
-            'formatter': 'simple',
-        },
-        'mail_admins': {
-            'level': "ERROR",
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
-        'file': {
-            'level': 'INFO',
-            'class': "logging.FileHandler",
-            'formatter': 'simple',
-            'filename': os.path.join(LOGGING_DIR, 'book.admin.log'),
-        },
-        'performance': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'formatter': 'simple',
-            'filename': os.path.join(LOGGING_DIR, 'book.performance.log'),
-        },
-    },
-
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        "interview.performance": {
-            "handlers": ["console", "performance"],
-            "level": "INFO",
-            "propagate": False,
-        },
-    },
-}
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
