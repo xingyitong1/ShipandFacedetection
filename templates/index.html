@@ -23,7 +23,7 @@
                                             <i class="fas fa-book f-40 text-c-blue "></i>
                                         </div>
                                         <div class="col">
-                                            <h3 class="f-w-300">50,167</h3>
+                                            <h3 class="f-w-300">随机生成一些</h3>
                                             <span class="d-block text-uppercase">航速与航向</span>
 
                                         </div>
@@ -88,16 +88,22 @@
                                     <h5>航行日志</h5>
                                 </div>
                                 <!-- 添加两个框，一个可以显示图片，另一个显示处理后的图片。再添加两个按钮，一个按鈕用来给第一个框选择图片，第二个按钮用于预测-->
-                                
-                                <div class="card-body">
-                                    <div class="image-container">
-                                        <img id="selected-image" src="#" alt="Selected Image" class="img-rounded">
+
+                                <div class="card-body"
+                                     style="display: flex ;flex-direction: row;align-items: center ;width: auto;height: auto">
+                                    <div class="image-container"
+                                         style="display: inline-block ;width: auto;height: auto">
+                                        <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail"
+                                             style="width: auto ; height: auto">
                                     </div>
-                                    <div class="processed-image-container">
-                                        <img id="processed-image" src="#" alt="Processed Image" class="img-rounded">
+                                    <div class="processed-image-container"
+                                         style="display: inline-block;width: auto;height: auto">
+                                        <img id="processed-image" src="#" alt="Processed Image"
+                                             class="img-thumbnail" style="width: auto ; height: auto">
                                     </div>
-                                    <div class="button-container">
-                                        <button id="select-image-button" class="btn">选择图片 </button>
+
+                                    <div class="button-container" style="margin-top: 20px">
+                                        <button id="select-image-button" class="btn">选择图片</button>
                                         <button id="predict-button" class="btn">预测</button>
                                     </div>
                                 </div>
