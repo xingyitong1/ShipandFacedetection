@@ -110,61 +110,6 @@
                             </div>
                         </div>
 
-
-
-                        <!-- 加的脚本文件选择图片-->
-{#                        <script>#}
-{#                            function method1(selectedImageSrc) {#}
-{#                                return selectedImageSrc;#}
-{#                            }#}
-{##}
-{#                            // Wait for the DOM to be fully loaded#}
-{#                            document.addEventListener("DOMContentLoaded", function () {#}
-{#                                // Get references to the buttons and image elements#}
-{#                                var selectImageButton = document.getElementById("select-image-button");#}
-{#                                var predictButton = document.getElementById("predict-button");#}
-{#                                var selectedImage = document.getElementById("selected-image");#}
-{#                                var processedImage = document.getElementById("processed-image");#}
-{##}
-{#                                // Add click event listener for the select image button#}
-{#                                selectImageButton.addEventListener("click", function () {#}
-{#                                    // Create a file input element#}
-{#                                    var input = document.createElement('input');#}
-{#                                    input.type = 'file';#}
-{#                                    input.accept = 'image/*'; // Accept only image files#}
-{##}
-{#                                    // Trigger the click event on the file input element#}
-{#                                    input.click();#}
-{##}
-{#                                    // Add change event listener to the file input element#}
-{#                                    input.addEventListener('change', function () {#}
-{#                                        var file = input.files[0]; // Get the selected file#}
-{#                                        var reader = new FileReader(); // Create a file reader#}
-{##}
-{#                                        // Set up the file reader to read the selected file#}
-{#                                        reader.onload = function (event) {#}
-{#                                            selectedImage.src = event.target.result; // Set the selected image source#}
-{#                                        };#}
-{##}
-{#                                        // Read the selected file as a data URL (base64 encoded)#}
-{#                                        reader.readAsDataURL(file);#}
-{#                                        processedImage.src = null;#}
-{#                                    });#}
-{#                                });#}
-{##}
-{#                                // Add click event listener for the predict button#}
-{#                                predictButton.addEventListener("click", function () {#}
-{#                                    // Simulate processing the selected image and displaying the result#}
-{#                                    var selectedImageSrc = selectedImage.src;#}
-{##}
-{#                                    // 调用 method1 函数进行处理#}
-{#                                    // 将处理后的图片展示出来#}
-{#                                    processedImage.src = method1(selectedImageSrc);#}
-{#                                });#}
-{#                            });#}
-{#                        </script>#}
-                        <!-- 加的脚本文件选择图片-->
-
                          <!-- 加的脚本文件选择图片-->
                         <script>
                             document.addEventListener("DOMContentLoaded", function () {
