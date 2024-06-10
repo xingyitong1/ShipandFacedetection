@@ -56,6 +56,8 @@ class HomeView(LoginRequiredMixin,TemplateView):
         # self.context['new_closed_records']=new_closed_records
  
         return render(request, self.template_name, self.context)
+
+
     
 # Handle Errors
 

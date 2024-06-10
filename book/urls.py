@@ -6,9 +6,6 @@ urlpatterns = [
 
     # HomePage
     path("",HomeView.as_view(), name='home'),
-
-
-
 ]
 
 
