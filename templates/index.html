@@ -96,71 +96,128 @@
                                     </div>
                                 </div>
                                 <!-- 按钮容器 -->
-                                <div class="button-container" style="display: flex; justify-content: center; margin-top: 20px;">
-                                    <!-- 隐藏的文件输入 -->
-                                    <input type="file" id="image-input" name="image" style="display: none;">
-                                    <!-- 选择图片按钮 -->
-                                    <button type="button" id="select-image-button" class="btn">选择图片</button>
-                                    <!-- 开始分析按钮 -->
-                                    <button type="submit" id="predict-button" class="btn">开始分析</button>
-                                </div>
+                                <form id="image-form" method="post" enctype="multipart/form-data" action="{% url 'upload_image' %}">
+                                    {% csrf_token %}
+                                    <div class="button-container" style="display: flex; justify-content: center; margin-top: 20px;">
+                                        <!-- 隐藏的文件输入 -->
+                                        <input type="file" id="image-input" name="image" style="display: none;">
+                                        <!-- 选择图片按钮 -->
+                                        <button type="button" id="select-image-button" class="btn">选择图片</button>
+                                        <!-- 开始分析按钮 -->
+                                        <button type="submit" id="predict-button" class="btn">开始分析</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
 
 
                         <!-- 加的脚本文件选择图片-->
-                        <script>
-                            function method1(selectedImageSrc) {
-                                return selectedImageSrc;
-                            }
+{#                        <script>#}
+{#                            function method1(selectedImageSrc) {#}
+{#                                return selectedImageSrc;#}
+{#                            }#}
+{##}
+{#                            // Wait for the DOM to be fully loaded#}
+{#                            document.addEventListener("DOMContentLoaded", function () {#}
+{#                                // Get references to the buttons and image elements#}
+{#                                var selectImageButton = document.getElementById("select-image-button");#}
+{#                                var predictButton = document.getElementById("predict-button");#}
+{#                                var selectedImage = document.getElementById("selected-image");#}
+{#                                var processedImage = document.getElementById("processed-image");#}
+{##}
+{#                                // Add click event listener for the select image button#}
+{#                                selectImageButton.addEventListener("click", function () {#}
+{#                                    // Create a file input element#}
+{#                                    var input = document.createElement('input');#}
+{#                                    input.type = 'file';#}
+{#                                    input.accept = 'image/*'; // Accept only image files#}
+{##}
+{#                                    // Trigger the click event on the file input element#}
+{#                                    input.click();#}
+{##}
+{#                                    // Add change event listener to the file input element#}
+{#                                    input.addEventListener('change', function () {#}
+{#                                        var file = input.files[0]; // Get the selected file#}
+{#                                        var reader = new FileReader(); // Create a file reader#}
+{##}
+{#                                        // Set up the file reader to read the selected file#}
+{#                                        reader.onload = function (event) {#}
+{#                                            selectedImage.src = event.target.result; // Set the selected image source#}
+{#                                        };#}
+{##}
+{#                                        // Read the selected file as a data URL (base64 encoded)#}
+{#                                        reader.readAsDataURL(file);#}
+{#                                        processedImage.src = null;#}
+{#                                    });#}
+{#                                });#}
+{##}
+{#                                // Add click event listener for the predict button#}
+{#                                predictButton.addEventListener("click", function () {#}
+{#                                    // Simulate processing the selected image and displaying the result#}
+{#                                    var selectedImageSrc = selectedImage.src;#}
+{##}
+{#                                    // 调用 method1 函数进行处理#}
+{#                                    // 将处理后的图片展示出来#}
+{#                                    processedImage.src = method1(selectedImageSrc);#}
+{#                                });#}
+{#                            });#}
+{#                        </script>#}
+                        <!-- 加的脚本文件选择图片-->
 
-                            // Wait for the DOM to be fully loaded
+                         <!-- 加的脚本文件选择图片-->
+                        <script>
                             document.addEventListener("DOMContentLoaded", function () {
-                                // Get references to the buttons and image elements
                                 var selectImageButton = document.getElementById("select-image-button");
                                 var predictButton = document.getElementById("predict-button");
                                 var selectedImage = document.getElementById("selected-image");
                                 var processedImage = document.getElementById("processed-image");
+                                var imageInput = document.getElementById("image-input");
+                                var imageForm = document.getElementById("image-form");
 
-                                // Add click event listener for the select image button
+                                // 选择图片按钮点击事件
                                 selectImageButton.addEventListener("click", function () {
-                                    // Create a file input element
-                                    var input = document.createElement('input');
-                                    input.type = 'file';
-                                    input.accept = 'image/*'; // Accept only image files
-
-                                    // Trigger the click event on the file input element
-                                    input.click();
-
-                                    // Add change event listener to the file input element
-                                    input.addEventListener('change', function () {
-                                        var file = input.files[0]; // Get the selected file
-                                        var reader = new FileReader(); // Create a file reader
-
-                                        // Set up the file reader to read the selected file
-                                        reader.onload = function (event) {
-                                            selectedImage.src = event.target.result; // Set the selected image source
-                                        };
-
-                                        // Read the selected file as a data URL (base64 encoded)
-                                        reader.readAsDataURL(file);
-                                        processedImage.src = null;
-                                    });
+                                    imageInput.click();
                                 });
 
-                                // Add click event listener for the predict button
-                                predictButton.addEventListener("click", function () {
-                                    // Simulate processing the selected image and displaying the result
-                                    var selectedImageSrc = selectedImage.src;
+                                // 文件输入更改事件
+                                imageInput.addEventListener("change", function () {
+                                    var file = imageInput.files[0];
+                                    var reader = new FileReader();
 
-                                    // 调用 method1 函数进行处理
-                                    // 将处理后的图片展示出来
-                                    processedImage.src = method1(selectedImageSrc);
+                                    reader.onload = function (event) {
+                                        selectedImage.src = event.target.result;
+                                    };
+
+                                    reader.readAsDataURL(file);
+                                    processedImage.src = null;
+                                });
+
+                                // 表单提交事件
+                                imageForm.addEventListener("submit", function (event) {
+                                    event.preventDefault(); // 防止表单默认提交
+
+                                    var formData = new FormData(imageForm);
+
+                                    fetch("{% url 'upload_image' %}", {
+                                        method: "POST",
+                                        body: formData,
+                                        headers: {
+                                            'X-CSRFToken': '{{ csrf_token }}'
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.processed_image_url) {
+                                            processedImage.src = data.processed_image_url;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error("Error:", error);
+                                    });
                                 });
                             });
                         </script>
-                        <!-- 加的脚本文件选择图片-->
 
                         <div class="col-xl-4 col-md-6">
                             <div class="card card-event">
