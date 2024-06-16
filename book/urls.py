@@ -4,6 +4,8 @@ from .views import upload_image
 from .views import upload_video
 from .views import driver
 from .views import upload_image_driver
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
 
     # HomePage
@@ -13,6 +15,7 @@ urlpatterns = [
     path("upload_video", upload_video, name="upload_video"),
     path('driver_warning/', driver, name='driver_warning'),
     path("upload_image_driver/", upload_image_driver, name="upload_image_driver"),
-
-
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
