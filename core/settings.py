@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'notifications',
     'flatpickr',
-    ]
+    'fatigue_detection']
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
@@ -177,6 +177,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DATA_URL = '/data/'
 DATA_ROOT = os.path.join(BASE_DIR, 'data')
+
 
 
 # CACHES = {

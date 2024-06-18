@@ -11,52 +11,109 @@ import numpy as np
 import argparse
 from Yolov5.models.experimental import attempt_load
 from Yolov5.utils.datasets import letterbox
-from Yolov5.utils.general import non_max_suppression, scale_coords,plot_one_box
-from Yolov5.utils.general import non_max_suppression, scale_coords
+from Yolov5.utils.general import non_max_suppression, scale_coords, plot_one_box
 from Yolov5.utils.torch_utils import select_device, time_synchronized
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from util.useful import get_n_days_ago, create_clean_dir, change_col_format
+import dlib
+from scipy.spatial import distance as dist
 
-#
 import sys
-sys.path.append('E:/ShipandFacedetection/Yolov5')
-
 sys.path.append('E:/ShipandFacedetection/Yolov5')
 
 TODAY = get_n_days_ago(0, "%Y%m%d")
 PAGINATOR_NUMBER = 5
 allowed_models = ['Category', 'Publisher', 'Book', 'Member', 'UserActivity']
 
+# Define the fatigue detection related constants and functions
 
-# models的参数配置
-def parse_opt():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='./Yolov5/weights/ship-best.pt', help='model.pt path(s)')
-    parser.add_argument('--weights', nargs='+', type=str, default='./Yolov5/weights/ship-best.pt',
-                        help='model.pt path(s)')
-    parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
-    parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
-    parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
-    parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
-    parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
-    opt = parser.parse_args(args=[])
-    return opt
+EYE_AR_THRESH = 0.2
+EYE_AR_CONSEC_FRAMES = 3
+MAR_THRESH = 0.5
+MOUTH_AR_CONSEC_FRAMES = 3
+HAR_THRESH = 0.3
+NOD_AR_CONSEC_FRAMES = 3
 
+COUNTER = 0
+TOTAL = 0
+mCOUNTER = 0
+mTOTAL = 0
+hCOUNTER = 0
+hTOTAL = 0
 
-def plot_one_box(img, x, color=None, label=None, line_thickness=None):
-    # Plots one bounding box on image img
-    tl = line_thickness or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1  # line/font thickness
-    color = color or [random.randint(0, 255) for _ in range(3)]
-    c1, c2 = (int(x[0]), int(x[1])), (int(x[2]), int(x[3]))
-    cv2.rectangle(img, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA)
-    if label:
-        tf = max(tl - 1, 1)  # font thickness
-        t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=tf)[0]
-        c2 = c1[0] + t_size[0], c1[1] - t_size[1] - 3
-        cv2.rectangle(img, c1, c2, color, -1, cv2.LINE_AA)  # filled
-        cv2.putText(img, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor('D:/myworkspace/JupyterNotebook/fatigue_detecting/model/shape_predictor_68_face_landmarks.dat')
+(lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
+(rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+(mStart, mEnd) = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
+
+def eye_aspect_ratio(eye):
+    A = dist.euclidean(eye[1], eye[5])
+    B = dist.euclidean(eye[2], eye[4])
+    C = dist.euclidean(eye[0], eye[3])
+    ear = (A + B) / (2.0 * C)
+    return ear
+
+def mouth_aspect_ratio(mouth):
+    A = np.linalg.norm(mouth[2] - mouth[9])
+    B = np.linalg.norm(mouth[4] - mouth[7])
+    C = np.linalg.norm(mouth[0] - mouth[6])
+    mar = (A + B) / (2.0 * C)
+    return mar
+
+def process_fatigue_frame(frame):
+    global COUNTER, TOTAL, mCOUNTER, mTOTAL, hCOUNTER, hTOTAL
+    
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    rects = detector(gray, 0)
+    
+    for rect in rects:
+        shape = predictor(gray, rect)
+        shape = face_utils.shape_to_np(shape)
+        
+        leftEye = shape[lStart:lEnd]
+        rightEye = shape[rStart:rEnd]
+        mouth = shape[mStart:mEnd]
+        
+        leftEAR = eye_aspect_ratio(leftEye)
+        rightEAR = eye_aspect_ratio(rightEye)
+        ear = (leftEAR + rightEAR) / 2.0
+        mar = mouth_aspect_ratio(mouth)
+        
+        leftEyeHull = cv2.convexHull(leftEye)
+        rightEyeHull = cv2.convexHull(rightEye)
+        cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
+        cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
+        mouthHull = cv2.convexHull(mouth)
+        cv2.drawContours(frame, [mouthHull], -1, (0, 255, 0), 1)
+        
+        if ear < EYE_AR_THRESH:
+            COUNTER += 1
+        else:
+            if COUNTER >= EYE_AR_CONSEC_FRAMES:
+                TOTAL += 1
+            COUNTER = 0
+        
+        if mar > MAR_THRESH:
+            mCOUNTER += 1
+        else:
+            if mCOUNTER >= MOUTH_AR_CONSEC_FRAMES:
+                mTOTAL += 1
+            mCOUNTER = 0
+        
+        cv2.putText(frame, "Faces: {}".format(len(rects)), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "COUNTER: {}".format(COUNTER), (150, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "Blinks: {}".format(TOTAL), (450, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+        cv2.putText(frame, "Yawning: {}".format(mTOTAL), (150, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "MAR: {:.2f}".format(mar), (300, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "mCOUNTER: {}".format(mCOUNTER), (450, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        
+        if TOTAL >= 50 or mTOTAL >= 15:
+            cv2.putText(frame, "SLEEP!!!", (100, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+    
+    return frame
 
 # HomePage
 
@@ -193,6 +250,35 @@ def upload_video(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+def upload_fatigue_video(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        uploaded_file = request.FILES['file']
+        upload_fs = FileSystemStorage(location='media')
+        uploaded_file_path = upload_fs.save(uploaded_file.name, uploaded_file)
+        uploaded_file_path = upload_fs.path(uploaded_file_path)
+
+        cap = cv2.VideoCapture(uploaded_file_path)
+        out_path = os.path.join('media/results', 'fatigue_processed_' + os.path.basename(uploaded_file_path))
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        ret, frame = cap.read()
+        vw = frame.shape[1]
+        vh = frame.shape[0]
+        output_video = cv2.VideoWriter(out_path, fourcc, 20.0, (vw, vh))
+
+        while True:
+            grabbed, frame = cap.read()
+            if not grabbed:
+                break
+
+            frame = process_fatigue_frame(frame)
+            output_video.write(frame)
+
+        cap.release()
+        output_video.release()
+        return JsonResponse({'processed_video_url': upload_fs.url(os.path.basename(out_path))})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 # Handle Errors
 
@@ -221,13 +307,3 @@ def bad_request(request, exception=None):
     context = {}
     response = render(request, "errors/400.html", context=context)
     response.status_code = 400
-    return response
-
-def driver(request):
-    return render(request, "includes/driver_warning.html")
-
-
-def upload_image_driver(request):
-
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
