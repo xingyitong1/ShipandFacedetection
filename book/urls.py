@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import HomeView, upload_image, upload_video,driver, upload_fatigue_video
+from .views import HomeView, upload_image, upload_video,driver, upload_fatigue_video, monitor
 
 urlpatterns = [
     # HomePage
@@ -10,6 +10,7 @@ urlpatterns = [
     path("upload_image/", upload_image, name="upload_image"),
     path("upload_video/", upload_video, name="upload_video"),
     path('driver_warning/', driver, name='driver_warning'),
+    path('monitor/', driver, name='monitor'),
     path("upload_fatigue_video/", upload_fatigue_video, name="upload_fatigue_video"),
 ]
 

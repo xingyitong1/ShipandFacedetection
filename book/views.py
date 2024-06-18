@@ -346,6 +346,9 @@ def upload_fatigue_video(request):
 def driver(request):
     return render(request,"includes/driver_warning.html")
 
+def monitor(request):
+    return render(request,"includes/monitor.html")
+
 # Handle Errors
 
 def page_not_found(request, exception):
