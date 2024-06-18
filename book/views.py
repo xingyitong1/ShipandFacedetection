@@ -20,7 +20,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from util.useful import get_n_days_ago, create_clean_dir, change_col_format
 import dlib
 from scipy.spatial import distance as dist
-
+from PIL import Image,ImageDraw,ImageFont
 import sys
 sys.path.append('E:/ShipandFacedetection/Yolov5')
 
@@ -90,7 +90,15 @@ def mouth_aspect_ratio(mouth):
     C = np.linalg.norm(mouth[0] - mouth[6])
     mar = (A + B) / (2.0 * C)
     return mar
-
+def put_chinese_text(img, text, position, color=(255, 0, 0), font_size=20):
+    # Convert the image to PIL format
+    img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    draw = ImageDraw.Draw(img_pil)
+    font = ImageFont.truetype('E:/ShipandFacedetection/book/STZHONGS.TTF', font_size)
+    draw.text(position, text, font=font, fill=color)
+    # Convert back to OpenCV format
+    img = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+    return img
 def process_fatigue_frame(frame):
     global COUNTER, TOTAL, mCOUNTER, mTOTAL, hCOUNTER, hTOTAL
     
@@ -131,17 +139,23 @@ def process_fatigue_frame(frame):
                 mTOTAL += 1
             mCOUNTER = 0
         
-        cv2.putText(frame, "Faces: {}".format(len(rects)), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame, "COUNTER: {}".format(COUNTER), (150, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame, "Blinks: {}".format(TOTAL), (450, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
-        cv2.putText(frame, "Yawning: {}".format(mTOTAL), (150, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame, "MAR: {:.2f}".format(mar), (300, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame, "mCOUNTER: {}".format(mCOUNTER), (450, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        
-        if TOTAL >= 5 or mTOTAL >= 3:
-            cv2.putText(frame, "别睡了!!!", (100, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
-    
+        # cv2.putText(frame, "Faces: {}".format(len(rects)), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        # cv2.putText(frame, "COUNTER: {}".format(COUNTER), (150, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        # cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        # cv2.putText(frame, "Blinks: {}".format(TOTAL), (450, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+        # cv2.putText(frame, "Yawning: {}".format(mTOTAL), (150, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        # cv2.putText(frame, "MAR: {:.2f}".format(mar), (300, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        # cv2.putText(frame, "mCOUNTER: {}".format(mCOUNTER), (450, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        frame = put_chinese_text(frame, "人脸数: {}".format(len(rects)), (10, 30))
+        frame = put_chinese_text(frame, "眨眼计数: {}".format(COUNTER), (10, 60))
+        frame = put_chinese_text(frame, "眼睛比例: {:.2f}".format(ear), (10, 90))
+        frame = put_chinese_text(frame, "眨眼次数: {}".format(TOTAL), (10, 120))
+        frame = put_chinese_text(frame, "打哈欠次数: {}".format(mTOTAL), (10, 150))
+        frame = put_chinese_text(frame, "嘴巴比例: {:.2f}".format(mar), (10, 180))
+        frame = put_chinese_text(frame, "打哈欠计数: {}".format(mCOUNTER), (10, 210))
+
+        if TOTAL >= 3 or mTOTAL >= 3:
+            frame = put_chinese_text(frame, "别睡了!!!", (100, 250), color=(255, 0, 0), font_size=60)
     return frame
 
 # HomePage
@@ -280,38 +294,63 @@ def upload_video(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-def capture_fatigue_video(request):
-    if request.method == 'POST':
-        cap = cv2.VideoCapture(0)  # 打开默认摄像头
-        if not cap.isOpened():
-            return JsonResponse({'error': 'Unable to access the camera'}, status=400)
+# def capture_fatigue_video(request):
+#     if request.method == 'POST':
+#         cap = cv2.VideoCapture(0)  # 打开默认摄像头
+#         if not cap.isOpened():
+#             return JsonResponse({'error': 'Unable to access the camera'}, status=400)
+#
+#         out_path = os.path.join('media', 'fatigue_live_processed.mp4')
+#         fourcc = cv2.VideoWriter_fourcc(*'avc1')
+#         ret, frame = cap.read()
+#         vw = frame.shape[1]
+#         vh = frame.shape[0]
+#         output_video = cv2.VideoWriter(out_path, fourcc, 20.0, (vw, vh))
+#
+#         while True:
+#             grabbed, frame = cap.read()
+#             if not grabbed:
+#                 break
+#
+#             frame = process_fatigue_frame(frame)
+#             output_video.write(frame)
+#
+#             # 按下 'q' 键退出循环
+#             if cv2.waitKey(1) & 0xFF == ord('q'):
+#                 break
+#
+#         cap.release()
+#         output_video.release()
+#         cv2.destroyAllWindows()
+#         return JsonResponse({'processed_video_url': 'media/fatigue_live_processed.mp4'})
 
-        out_path = os.path.join('media', 'fatigue_live_processed.mp4')
-        fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    # 使用外置摄像头捕捉视频并进行疲劳监测
+def capture_fatigue_video(output_path):
+    cap = cv2.VideoCapture(0)
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    out_path = os.path.join(output_path, 'fatigue_capture.mp4')
+    ret, frame = cap.read()
+    vw = frame.shape[1]
+    vh = frame.shape[0]
+    output_video = cv2.VideoWriter(out_path, fourcc, 20.0, (vw, vh))
+
+    while True:
         ret, frame = cap.read()
-        vw = frame.shape[1]
-        vh = frame.shape[0]
-        output_video = cv2.VideoWriter(out_path, fourcc, 20.0, (vw, vh))
+        if not ret:
+            break
 
-        while True:
-            grabbed, frame = cap.read()
-            if not grabbed:
-                break
+        frame = process_fatigue_frame(frame)
+        output_video.write(frame)
 
-            frame = process_fatigue_frame(frame)
-            output_video.write(frame)
+        # Display the frame
+        cv2.imshow("Frame", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-            # 按下 'q' 键退出循环
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cap.release()
-        output_video.release()
-        cv2.destroyAllWindows()
-        return JsonResponse({'processed_video_url': 'media/fatigue_live_processed.mp4'})
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
+    cap.release()
+    output_video.release()
+    cv2.destroyAllWindows()
+    return out_path
 
 
 def upload_fatigue_video(request):
