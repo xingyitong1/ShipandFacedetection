@@ -64,47 +64,51 @@
             });
 
             // 文件输入更改事件
-            fileInput.addEventListener("change", function () {
-                var file = fileInput.files;
-                var reader = new FileReader();
-
-                reader.onload = function (event) {
-
+            reader.onload = function (event) {
+                if (file.type.startsWith("image/")) {
+                    selectedImage.src = event.target.result;
+                    selectedImage.style.display = "block";
+                    selectedVideo.style.display = "none";
+                    fileForm.action = "{% url 'upload_image' %}";
+                } else if (file.type.startsWith("video/")) {
                     selectedVideo.src = event.target.result;
                     selectedVideo.style.display = "block";
-                    fileForm.action = "{% url 'upload_fatigue_video' %}";
-
-                };
+                    selectedImage.style.display = "none";
+                    fileForm.action = "{% url 'upload_video' %}";
+                }
+            };
 
                 reader.readAsDataURL(file);
+                processedImage.src = "";
                 processedVideo.src = "";
+                processedImage.style.display = "none";
                 processedVideo.style.display = "none";
-            });
-
-            // 表单提交事件
-            fileForm.addEventListener("submit", function (event) {
-                event.preventDefault(); // 防止表单默认提交
-
-                var formData = new FormData(fileForm);
-
-                fetch(fileForm.action, {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        processedVideo.src = data.processed_video_url;
-                        processedVideo.style.display = "block";
-
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                    });
-            });
         });
+
+        // 表单提交事件
+        fileForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // 防止表单默认提交
+
+            var formData = new FormData(fileForm);
+
+            fetch(fileForm.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    processedVideo.src = data.processed_video_url;
+                    processedVideo.style.display = "block";
+
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        });
+        
     </script>
 
 {% endblock content %}
