@@ -72,7 +72,7 @@ hCOUNTER = 0
 hTOTAL = 0
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('E:/ShipandFacedetection/Yolov5/weights/shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('D:/bigdatamovie/ShipandFacedetection/Yolov5/weights/shape_predictor_68_face_landmarks.dat')
 (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
 (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 (mStart, mEnd) = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
