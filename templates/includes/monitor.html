@@ -1,0 +1,126 @@
+{% extends "layouts/base.html" %}
+{% load book_extras %}
+{% block title %} Dashboard {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+    <div class="col-xl-8 col-md-6">
+        <div class="card Recent-Users">
+            <div class="card-header">
+                <h5>实时监控检测</h5>
+            </div>
+            <!-- 添加两个框，一个可以显示图片或视频，另一个显示处理后的图片或视频。再添加两个按钮，一个按钮用来给第一个框选择文件，第二个按钮用于预测 -->
+            <div class="card-body"
+                 style="width: auto; height: auto; display: flex; justify-content: center;">
+                <!-- 容器1：用于显示选择的图片或视频 -->
+                <div class="file-container"
+                     style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; margin-right: 20px; text-align: center;">
+                    <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail"
+                         style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                    <video id="selected-video" controls
+                           style="width: 100%; height: 100%; display: none;"></video>
+                </div>
+                <!-- 容器2：用于显示处理后的图片或视频 -->
+                <div class="processed-file-container"
+                     style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; text-align: center;">
+                    <img id="processed-image" src="#" alt="Processed Image" class="img-thumbnail"
+                         style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                    <video id="processed-video" controls
+                           style="width: 100%; height: 100%;"></video>
+                </div>
+            </div>
+            <!-- 按钮容器 -->
+            <form id="file-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="button-container"
+                     style="display: flex; justify-content: center; margin-top: 20px;">
+                    <!-- 隐藏的文件输入 -->
+                    <input type="file" id="file-input" name="file" accept="image/*,video/*"
+                           style="display: none;">
+                    <!-- 选择文件按钮 -->
+                    <button type="button" id="select-file-button" class="btn">选择文件</button>
+                    <!-- 开始分析按钮 -->
+                    <button type="submit" id="predict-button" class="btn">开始分析</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var selectFileButton = document.getElementById("select-file-button");
+            var predictButton = document.getElementById("predict-button");
+            var selectedImage = document.getElementById("selected-image");
+            var selectedVideo = document.getElementById("selected-video");
+            var processedImage = document.getElementById("processed-image");
+            var processedVideo = document.getElementById("processed-video");
+            var fileInput = document.getElementById("file-input");
+            var fileForm = document.getElementById("file-form");
+
+            // 选择文件按钮点击事件
+            selectFileButton.addEventListener("click", function () {
+                fileInput.click();
+            });
+
+            // 文件输入更改事件
+            fileInput.addEventListener("change", function () {
+                var file = fileInput.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (event) {
+                    if (file.type.startsWith("image/")) {
+                        selectedImage.src = event.target.result;
+                        selectedImage.style.display = "block";
+                        selectedVideo.style.display = "none";
+                        fileForm.action = "{% url 'upload_image' %}";
+                    } else if (file.type.startsWith("video/")) {
+                        selectedVideo.src = event.target.result;
+                        selectedVideo.style.display = "block";
+                        selectedImage.style.display = "none";
+                        fileForm.action = "{% url 'upload_fatigue_video' %}";
+                    }
+                };
+
+                reader.readAsDataURL(file);
+                processedImage.src = "";
+                processedVideo.src = "";
+                processedImage.style.display = "none";
+                processedVideo.style.display = "none";
+            });
+
+            // 表单提交事件
+            fileForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // 防止表单默认提交
+
+                var formData = new FormData(fileForm);
+
+                fetch(fileForm.action, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.processed_image_url) {
+                            processedImage.src = data.processed_image_url;
+                            processedImage.style.display = "block";
+                            processedVideo.style.display = "none";
+                        } else if (data.processed_video_url) {
+                            {#console.log(data.processed_video_url)#}
+                            processedVideo.src = data.processed_video_url;
+                            processedVideo.style.display = "block";
+                            processedImage.style.display = "none";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            });
+        });
+
+    </script>
+
+{% endblock content %}
