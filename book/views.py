@@ -9,9 +9,11 @@ import torch
 import random
 import numpy as np
 import argparse
+
+from imutils import face_utils
 from Yolov5.models.experimental import attempt_load
 from Yolov5.utils.datasets import letterbox
-from Yolov5.utils.general import non_max_suppression, scale_coords, plot_one_box
+from Yolov5.utils.general import non_max_suppression, scale_coords
 from Yolov5.utils.torch_utils import select_device, time_synchronized
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -25,6 +27,33 @@ sys.path.append('E:/ShipandFacedetection/Yolov5')
 TODAY = get_n_days_ago(0, "%Y%m%d")
 PAGINATOR_NUMBER = 5
 allowed_models = ['Category', 'Publisher', 'Book', 'Member', 'UserActivity']
+
+# models的参数配置
+def parse_opt():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--weights', nargs='+', type=str, default='./Yolov5/weights/ship-best.pt', help='model.pt path(s)')
+    parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
+    parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
+    parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
+    parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+    parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
+    parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
+    opt = parser.parse_args(args=[])
+    return opt
+
+
+def plot_one_box(img, x, color=None, label=None, line_thickness=None):
+    # Plots one bounding box on image img
+    tl = line_thickness or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1  # line/font thickness
+    color = color or [random.randint(0, 255) for _ in range(3)]
+    c1, c2 = (int(x[0]), int(x[1])), (int(x[2]), int(x[3]))
+    cv2.rectangle(img, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA)
+    if label:
+        tf = max(tl - 1, 1)  # font thickness
+        t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=tf)[0]
+        c2 = c1[0] + t_size[0], c1[1] - t_size[1] - 3
+        cv2.rectangle(img, c1, c2, color, -1, cv2.LINE_AA)  # filled
+        cv2.putText(img, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
 
 # Define the fatigue detection related constants and functions
 
@@ -43,7 +72,7 @@ hCOUNTER = 0
 hTOTAL = 0
 
 detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor('D:/myworkspace/JupyterNotebook/fatigue_detecting/model/shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('E:/ShipandFacedetection/Yolov5/weights/shape_predictor_68_face_landmarks.dat')
 (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
 (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 (mStart, mEnd) = face_utils.FACIAL_LANDMARKS_IDXS["mouth"]
@@ -132,7 +161,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
 def process_video(video_path, model, opt, device, half):
     cap = cv2.VideoCapture(video_path)
-    out_path = os.path.join('media/results', 'processed_' + os.path.basename(video_path))
+    out_path = os.path.join('media', 'processed_' + os.path.basename(video_path))
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     ret, frame = cap.read()
     vw = frame.shape[1]
@@ -216,10 +245,8 @@ def upload_image(request):
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
                 for *xyxy, conf, cls in reversed(det):
                     label = f'{model.names[int(cls)]} {conf:.2f}'
-                    plot_one_box(xyxy, img0, label=label, color=[random.randint(0, 255) for _ in range(3)])
                     plot_one_box(img0,xyxy, label=label, color=[random.randint(0, 255) for _ in range(3)])
 
-        file_name = "processsed_"+uploaded_file.name
         file_name = "processsed_" + uploaded_file.name
         result_path = os.path.join('media/', file_name)
         cv2.imwrite(result_path, img0)
@@ -258,7 +285,7 @@ def upload_fatigue_video(request):
         uploaded_file_path = upload_fs.path(uploaded_file_path)
 
         cap = cv2.VideoCapture(uploaded_file_path)
-        out_path = os.path.join('media/results', 'fatigue_processed_' + os.path.basename(uploaded_file_path))
+        out_path = os.path.join('media/', 'fatigue_processed_' + os.path.basename(uploaded_file_path))
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         ret, frame = cap.read()
         vw = frame.shape[1]
@@ -279,6 +306,8 @@ def upload_fatigue_video(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+def driver(request):
+    return render(request,"includes/driver_warning.html")
 
 # Handle Errors
 

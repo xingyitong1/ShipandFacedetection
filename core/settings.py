@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'ckeditor',
     'notifications',
-    'flatpickr',
-    'fatigue_detection']
+    'flatpickr']
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"

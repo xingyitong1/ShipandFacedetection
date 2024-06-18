@@ -9,7 +9,7 @@
     <div class="col-xl-8 col-md-6">
         <div class="card Recent-Users">
             <div class="card-header">
-                <h5>船只检测</h5>
+                <h5>驾驶员疲劳检测</h5>
             </div>
             <!-- 添加两个框，一个可以显示图片或视频，另一个显示处理后的图片或视频。再添加两个按钮，一个按钮用来给第一个框选择文件，第二个按钮用于预测 -->
             <div class="card-body"
@@ -70,15 +70,15 @@
 
                 reader.onload = function (event) {
 
-                    selectedImage.src = event.target.result;
-                    selectedImage.style.display = "block";
-                    fileForm.action = "{% url 'upload_image_driver' %}";
+                    selectedVideo.src = event.target.result;
+                    selectedVideo.style.display = "block";
+                    fileForm.action = "{% url 'upload_fatigue_video' %}";
 
                 };
 
                 reader.readAsDataURL(file);
-                processedImage.src = "";
-                processedImage.style.display = "none";
+                processedVideo.src = "";
+                processedVideo.style.display = "none";
             });
 
             // 表单提交事件
@@ -96,8 +96,8 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        processedImage.src = data.processed_image_url;
-                        processedImage.style.display = "block";
+                        processedVideo.src = data.processed_video_url;
+                        processedVideo.style.display = "block";
 
                     })
                     .catch(error => {
