@@ -28,7 +28,7 @@
                     <img id="processed-image" src="#" alt="Processed Image" class="img-thumbnail"
                          style="width: 100%; height: 100%; object-fit: contain; display: none;">
                     <video id="processed-video" controls
-                           style="width: 100%; height: 100%; display: none;"></video>
+                           style="width: 100%; height: 100%;"></video>
                 </div>
             </div>
             <!-- 按钮容器 -->
@@ -64,51 +64,63 @@
             });
 
             // 文件输入更改事件
-            reader.onload = function (event) {
-                if (file.type.startsWith("image/")) {
-                    selectedImage.src = event.target.result;
-                    selectedImage.style.display = "block";
-                    selectedVideo.style.display = "none";
-                    fileForm.action = "{% url 'upload_image' %}";
-                } else if (file.type.startsWith("video/")) {
-                    selectedVideo.src = event.target.result;
-                    selectedVideo.style.display = "block";
-                    selectedImage.style.display = "none";
-                    fileForm.action = "{% url 'upload_video' %}";
-                }
-            };
+            fileInput.addEventListener("change", function () {
+                var file = fileInput.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (event) {
+                    if (file.type.startsWith("image/")) {
+                        selectedImage.src = event.target.result;
+                        selectedImage.style.display = "block";
+                        selectedVideo.style.display = "none";
+                        fileForm.action = "{% url 'upload_image' %}";
+                    } else if (file.type.startsWith("video/")) {
+                        selectedVideo.src = event.target.result;
+                        selectedVideo.style.display = "block";
+                        selectedImage.style.display = "none";
+                        fileForm.action = "{% url 'upload_fatigue_video' %}";
+                    }
+                };
 
                 reader.readAsDataURL(file);
                 processedImage.src = "";
                 processedVideo.src = "";
                 processedImage.style.display = "none";
                 processedVideo.style.display = "none";
-        });
+            });
 
-        // 表单提交事件
-        fileForm.addEventListener("submit", function (event) {
-            event.preventDefault(); // 防止表单默认提交
+            // 表单提交事件
+            fileForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // 防止表单默认提交
 
-            var formData = new FormData(fileForm);
+                var formData = new FormData(fileForm);
 
-            fetch(fileForm.action, {
-                method: "POST",
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    processedVideo.src = data.processed_video_url;
-                    processedVideo.style.display = "block";
-
+                fetch(fileForm.action, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
                 })
-                .catch(error => {
-                    console.error("Error:", error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.processed_image_url) {
+                            processedImage.src = data.processed_image_url;
+                            processedImage.style.display = "block";
+                            processedVideo.style.display = "none";
+                        } else if (data.processed_video_url) {
+                            {#console.log(data.processed_video_url)#}
+                            processedVideo.src = data.processed_video_url;
+                            processedVideo.style.display = "block";
+                            processedImage.style.display = "none";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            });
         });
-        
+
     </script>
 
 {% endblock content %}
