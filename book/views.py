@@ -139,8 +139,8 @@ def process_fatigue_frame(frame):
         cv2.putText(frame, "MAR: {:.2f}".format(mar), (300, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         cv2.putText(frame, "mCOUNTER: {}".format(mCOUNTER), (450, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         
-        if TOTAL >= 50 or mTOTAL >= 15:
-            cv2.putText(frame, "SLEEP!!!", (100, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
+        if TOTAL >= 5 or mTOTAL >= 3:
+            cv2.putText(frame, "别睡了!!!", (100, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
     
     return frame
 
@@ -161,8 +161,11 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
 def process_video(video_path, model, opt, device, half):
     cap = cv2.VideoCapture(video_path)
-    out_path = os.path.join('media', 'processed_' + os.path.basename(video_path))
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out_path = os.path.join('media', 'processed_' + os.path.splitext(os.path.basename(video_path))[0] + '.mp4')
+
+    # Change the fourcc to 'avc1' for H.264 encoding
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+
     ret, frame = cap.read()
     vw = frame.shape[1]
     vh = frame.shape[0]
@@ -277,6 +280,40 @@ def upload_video(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+def capture_fatigue_video(request):
+    if request.method == 'POST':
+        cap = cv2.VideoCapture(0)  # 打开默认摄像头
+        if not cap.isOpened():
+            return JsonResponse({'error': 'Unable to access the camera'}, status=400)
+
+        out_path = os.path.join('media', 'fatigue_live_processed.mp4')
+        fourcc = cv2.VideoWriter_fourcc(*'avc1')
+        ret, frame = cap.read()
+        vw = frame.shape[1]
+        vh = frame.shape[0]
+        output_video = cv2.VideoWriter(out_path, fourcc, 20.0, (vw, vh))
+
+        while True:
+            grabbed, frame = cap.read()
+            if not grabbed:
+                break
+
+            frame = process_fatigue_frame(frame)
+            output_video.write(frame)
+
+            # 按下 'q' 键退出循环
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        cap.release()
+        output_video.release()
+        cv2.destroyAllWindows()
+        return JsonResponse({'processed_video_url': 'media/fatigue_live_processed.mp4'})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+
 def upload_fatigue_video(request):
     if request.method == 'POST' and request.FILES.get('file'):
         uploaded_file = request.FILES['file']
@@ -286,7 +323,7 @@ def upload_fatigue_video(request):
 
         cap = cv2.VideoCapture(uploaded_file_path)
         out_path = os.path.join('media/', 'fatigue_processed_' + os.path.basename(uploaded_file_path))
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        fourcc = cv2.VideoWriter_fourcc(*'avc1')
         ret, frame = cap.read()
         vw = frame.shape[1]
         vh = frame.shape[0]
