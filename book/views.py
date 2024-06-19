@@ -25,7 +25,7 @@ import dlib
 from scipy.spatial import distance as dist
 from PIL import Image,ImageDraw,ImageFont
 import sys
-sys.path.append('D:/bigdatamovie/ShipandFacedetection/Yolov5')
+sys.path.append('./Yolov5')
 
 TODAY = get_n_days_ago(0, "%Y%m%d")
 PAGINATOR_NUMBER = 5
