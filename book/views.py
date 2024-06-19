@@ -22,7 +22,7 @@ import dlib
 from scipy.spatial import distance as dist
 from PIL import Image,ImageDraw,ImageFont
 import sys
-sys.path.append('E:/ShipandFacedetection/Yolov5')
+sys.path.append('D:/bigdatamovie/ShipandFacedetection/Yolov5')
 
 TODAY = get_n_days_ago(0, "%Y%m%d")
 PAGINATOR_NUMBER = 5
@@ -380,6 +380,14 @@ def upload_fatigue_video(request):
         output_video.release()
         return JsonResponse({'processed_video_url': upload_fs.url(os.path.basename(out_path))})
 
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def upload_real_time_video(request):
+    print("Request method:", request.method)
+    if request.method == 'POST':
+        print("POST request received")
+    else:
+        print("Non-POST request received")
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def driver(request):
