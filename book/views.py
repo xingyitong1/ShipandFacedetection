@@ -107,6 +107,7 @@ def process_fatigue_frame(frame):
     
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     rects = detector(gray, 0)
+    flag = False
     
     for rect in rects:
         shape = predictor(gray, rect)
@@ -159,7 +160,8 @@ def process_fatigue_frame(frame):
 
         if TOTAL >= 3 or mTOTAL >= 3:
             frame = put_chinese_text(frame, "别睡了!!!", (100, 250), color=(255, 0, 0), font_size=60)
-    return frame
+            flag = True
+    return frame,flag
 
 # HomePage
 
@@ -327,33 +329,6 @@ def upload_video(request):
 #         cv2.destroyAllWindows()
 #         return JsonResponse({'processed_video_url': 'media/fatigue_live_processed.mp4'})
 
-    # 使用外置摄像头捕捉视频并进行疲劳监测
-def capture_fatigue_video(output_path):
-    cap = cv2.VideoCapture(0)
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')
-    out_path = os.path.join(output_path, 'fatigue_capture.mp4')
-    ret, frame = cap.read()
-    vw = frame.shape[1]
-    vh = frame.shape[0]
-    output_video = cv2.VideoWriter(out_path, fourcc, 20.0, (vw, vh))
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        frame = process_fatigue_frame(frame)
-        output_video.write(frame)
-
-        # Display the frame
-        cv2.imshow("Frame", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    output_video.release()
-    cv2.destroyAllWindows()
-    return out_path
 
 
 def upload_fatigue_video(request):
@@ -377,12 +352,12 @@ def upload_fatigue_video(request):
             if not grabbed:
                 break
 
-            frame = process_fatigue_frame(frame)
+            frame,flag = process_fatigue_frame(frame)
             output_video.write(frame)
 
         cap.release()
         output_video.release()
-        return JsonResponse({'processed_video_url': upload_fs.url(os.path.basename(out_path))})
+        return JsonResponse({'processed_video_url': upload_fs.url(os.path.basename(out_path)),'flag':flag})
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
@@ -425,12 +400,12 @@ def upload_real_time_video(request):
             if not grabbed:
                 break
 
-            frame = process_fatigue_frame(frame)
+            frame,flag = process_fatigue_frame(frame)
             output_video.write(frame)
 
         cap.release()
         output_video.release()
-        return JsonResponse({'processed_video_url': upload_fs.url(os.path.basename(out_path))})
+        return JsonResponse({'processed_video_url': upload_fs.url(os.path.basename(out_path)),'flag':flag})
 
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
