@@ -17,6 +17,9 @@ from Yolov5.utils.general import non_max_suppression, scale_coords
 from Yolov5.utils.torch_utils import select_device, time_synchronized
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import default_storage
+import subprocess
 from util.useful import get_n_days_ago, create_clean_dir, change_col_format
 import dlib
 from scipy.spatial import distance as dist
@@ -358,6 +361,7 @@ def upload_fatigue_video(request):
         uploaded_file = request.FILES['file']
         upload_fs = FileSystemStorage(location='media')
         uploaded_file_path = upload_fs.save(uploaded_file.name, uploaded_file)
+
         uploaded_file_path = upload_fs.path(uploaded_file_path)
 
         cap = cv2.VideoCapture(uploaded_file_path)
@@ -382,12 +386,53 @@ def upload_fatigue_video(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+
+def convert_to_mp4(webm_file_path):
+    upload_fs = FileSystemStorage(location='media')
+    mp4_file_path = webm_file_path.replace('.webm', '.mp4')
+    full_webm_file_path = upload_fs.path(webm_file_path)
+    full_mp4_file_path = upload_fs.path(mp4_file_path)
+
+    command = [
+        'ffmpeg',
+        '-i', full_webm_file_path,
+        '-c:v', 'libx264',
+        '-c:a', 'aac',
+        full_mp4_file_path
+    ]
+
+    subprocess.run(command, check=True)
+    return mp4_file_path
+
 def upload_real_time_video(request):
-    print("Request method:", request.method)
-    if request.method == 'POST':
-        print("POST request received")
-    else:
-        print("Non-POST request received")
+    if request.method == 'POST' and request.FILES.get('video'):
+        video_file = request.FILES['video']
+        # 存储视频片段到服务器
+        upload_fs = FileSystemStorage(location='media')
+        file_path = upload_fs.save(video_file.name, video_file)
+        uploaded_file_path = upload_fs.path(file_path)
+
+        cap = cv2.VideoCapture(uploaded_file_path)
+        out_path = os.path.join('media/', 'fatigue_real_time_processed_' + os.path.basename(uploaded_file_path).replace('.webm', '.mp4'))
+        fourcc = cv2.VideoWriter_fourcc(*'avc1')
+        ret, frame = cap.read()
+        vw = frame.shape[1]
+        vh = frame.shape[0]
+        output_video = cv2.VideoWriter(out_path, fourcc, 20.0, (vw, vh))
+
+        while True:
+            grabbed, frame = cap.read()
+            if not grabbed:
+                break
+
+            frame = process_fatigue_frame(frame)
+            output_video.write(frame)
+
+        cap.release()
+        output_video.release()
+        return JsonResponse({'processed_video_url': upload_fs.url(os.path.basename(out_path))})
+
+
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def driver(request):
