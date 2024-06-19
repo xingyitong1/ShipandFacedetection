@@ -189,6 +189,8 @@
             var fileInput = document.getElementById("file-input");
             var fileForm = document.getElementById("file-form");
             var status = document.getElementById("status");
+            var counttxt = document.getElementById("violation-count");
+            var count = 0;
 
             // 选择文件按钮点击事件
             selectFileButton.addEventListener("click", function () {
@@ -245,7 +247,9 @@
                             processedVideo.src = data.processed_video_url;
                             if (data.flag)
                             {
+                                count++;
                                 status.textContent = "疲劳驾驶";
+                                counttxt.textContent = count.toString();
                             }
                             processedVideo.style.display = "block";
                             processedImage.style.display = "none";

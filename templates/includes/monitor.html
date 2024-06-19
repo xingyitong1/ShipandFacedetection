@@ -192,6 +192,8 @@
             const fileInput = document.getElementById("file-input");
             const fileForm = document.getElementById("file-form");
             var status = document.getElementById("status");
+            var counttxt = document.getElementById("violation-count")
+            var count = 0;
 
             document.getElementById('open-camera').addEventListener('click', function () {
                 if (stream) {
@@ -266,7 +268,9 @@
                     .then(data => {
                         if (data.processed_video_url) {
                             if(data.flag){
+                                count++;
                                 status.textContent = "疲劳驾驶";
+                                counttxt.textContent = count.toString();
                             }
                             processedVideo.src = data.processed_video_url;
                             processedVideo.style.display = "block";
