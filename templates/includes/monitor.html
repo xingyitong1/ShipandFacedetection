@@ -6,46 +6,177 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-    <div class="col-xl-8 col-md-6">
-        <div class="card Recent-Users">
-            <div class="card-header">
-                <h5>实时监控检测</h5>
+
+    <div class="main-body">
+        <br>
+        <div class="page-wrapper">
+            <div class="row">
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-anchor f-40 text-c-blue "></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300" id="speed-heading"></h3>
+                                    <span class="d-block text-uppercase">航速</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Count Members -->
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-arrows-alt f-40 text-c-purple"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300" id="heading-span"></h3>
+                                    <span class="d-block text-uppercase">航向</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Count Categories -->
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-user-friends f-40 " style="color:coral"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300",id = "status">无异常</h3>
+                                    <span class="d-block text-uppercase">驾驶员状态</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Count Publishers -->
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class=" feather icon-file-text f-40 text-c-green"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300">无异常</h3>
+                                    <span class="d-block text-uppercase">航行状态</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8 col-md-6">
+                    <div class="card Recent-Users">
+                        <div class="card-header">
+                            <h5>实时监控检测</h5>
+                        </div>
+                        <div class="card-body"
+                             style="width: auto; height: auto; display: flex; justify-content: center;">
+                            <!-- 容器1：用于显示选择的图片或视频 -->
+                            <div class="file-container"
+                                 style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; margin-right: 20px; text-align: center;">
+                                <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail"
+                                     style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                                <video id="selected-video" controls autoplay
+                                       style="width: 100%; height: 100%; transform: scaleX(-1);object-fit: contain;"></video>
+                            </div>
+
+                            <!-- 容器2：用于显示处理后的图片或视频 -->
+                            <div class="processed-file-container"
+                                 style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; text-align: center;">
+                                <img id="processed-image" src="#" alt="Processed Image" class="img-thumbnail"
+                                     style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                                <video id="processed-video" controls
+                                       style="width: 100%; height: 100%; object-fit: contain;"></video>
+                            </div>
+                        </div>
+
+                        <!-- 按钮容器 -->
+                        <form id="file-form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="button-container"
+                                 style="display: flex; justify-content: center; margin-top: 20px;">
+                                <!-- 隐藏的文件输入 -->
+                                <input type="file" id="file-input" name="file" accept="image/*,video/*"
+                                       style="display: none;">
+                                <button type="button" id="open-camera" class="btn">打开摄像头</button>
+                                <button type="button" id="stop-camera" class="btn">关闭摄像头</button>
+                                <button type="button" id="start-recording" class="btn">开始录制</button>
+                                <button type="button" id="stop-recording" class="btn">停止录制</button>
+                                <button type="submit" id="upload-video" class="btn">上传视频</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="card card-event">
+                        <!-- Coming Event -->
+                        <div class="card-block">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col">
+                                    <h5 class="m-0">累计航程</h5>
+                                </div>
+                                <div class="col-auto">
+                                    <label class="label theme-bg2 text-white f-14 f-w-400 float-right">34%</label>
+                                </div>
+                            </div>
+                            <h2 class="mt-3 f-w-300">
+                                <span class="d-block" id="distance-span">0</span>
+                                <sub class="text-muted f-14"></sub>
+                            </h2>
+                            <h6 class="text-muted mt-4 mb-0">安全人人抓，幸福千万家。</h6>
+                            <i class="fab fa-angellist text-c-purple f-50"></i>
+                        </div>
+                    </div>
+
+                    <!-- New members registered this week -->
+                    <div class="card">
+                        <div class="card-block border-bottom">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-user f-30" style="color:coral"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="mt-2 f-w-300">
+                                        {{ new_members_thisweek }}
+                                        <sub class="text-muted f-15">
+                                            <span id="violation-count">0</span> 次疲劳
+                                        </sub>
+                                    </h3>
+                                    <span class="d-block text-uppercase">1h内</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Books lent this week -->
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-book f-30 text-c-blue"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="mt-2 f-w-300">
+                                        {{ lent_books_thisweek }}
+                                        <sub class="text-muted f-15">
+                                            <span id="overspeed-count">0</span> 次超速
+                                        </sub>
+                                    </h3>
+                                    <span class="d-block text-uppercase">1h内</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body" style="width: auto; height: auto; display: flex; justify-content: center;">
-                <!-- 容器1：用于显示选择的图片或视频 -->
-                <div class="file-container"
-                     style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; margin-right: 20px; text-align: center;">
-                    <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail"
-                         style="width: 100%; height: 100%; object-fit: contain; display: none;">
-                    <video id="selected-video" controls autoplay
-                           style="width: 100%; height: 100%; transform: scaleX(-1);object-fit: contain;"></video>
-                </div>
-
-                <!-- 容器2：用于显示处理后的图片或视频 -->
-                <div class="processed-file-container"
-                     style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; text-align: center;">
-                    <img id="processed-image" src="#" alt="Processed Image" class="img-thumbnail"
-                         style="width: 100%; height: 100%; object-fit: contain; display: none;">
-                    <video id="processed-video" controls
-                           style="width: 100%; height: 100%; object-fit: contain;"></video>
-                </div>
-            </div>
-
-            <!-- 按钮容器 -->
-            <form id="file-form" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="button-container" style="display: flex; justify-content: center; margin-top: 20px;">
-                    <!-- 隐藏的文件输入 -->
-                    <input type="file" id="file-input" name="file" accept="image/*,video/*"
-                           style="display: none;">
-                    <button type="button" id="open-camera" class="btn">打开摄像头</button>
-                    <button type="button" id="stop-camera" class="btn">关闭摄像头</button>
-                    <button type="button" id="start-recording" class="btn">开始录制</button>
-                    <button type="button" id="stop-recording" class="btn">停止录制</button>
-                    <button type="submit" id="upload-video" class="btn">上传视频</button>
-
-                </div>
-            </form>
         </div>
     </div>
 
@@ -60,6 +191,9 @@
             const selectedVideo = document.getElementById("selected-video");
             const fileInput = document.getElementById("file-input");
             const fileForm = document.getElementById("file-form");
+            var status = document.getElementById("status");
+            var counttxt = document.getElementById("violation-count")
+            var count = 0;
 
             document.getElementById('open-camera').addEventListener('click', function () {
                 if (stream) {
@@ -132,7 +266,12 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                    if (data.processed_video_url) {
+                        if (data.processed_video_url) {
+                            if(data.flag){
+                                count++;
+                                status.textContent = "疲劳驾驶";
+                                counttxt.textContent = count.toString();
+                            }
                             processedVideo.src = data.processed_video_url;
                             processedVideo.style.display = "block";
                         }

@@ -6,45 +6,176 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-    <div class="col-xl-8 col-md-6">
-        <div class="card Recent-Users">
-            <div class="card-header">
-                <h5>驾驶员疲劳检测</h5>
+
+    <div class="main-body">
+        <br>
+        <div class="page-wrapper">
+            <div class="row">
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-anchor f-40 text-c-blue "></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300" id="speed-heading"></h3>
+                                    <span class="d-block text-uppercase">航速</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Count Members -->
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-arrows-alt f-40 text-c-purple"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300" id="heading-span"></h3>
+                                    <span class="d-block text-uppercase">航向</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Count Categories -->
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-user-friends f-40 " style="color:coral"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300", id = "status">无异常</h3>
+                                    <span class="d-block text-uppercase">驾驶员状态</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Count Publishers -->
+                <div class='col-md-3'>
+                    <div class="card">
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class=" feather icon-file-text f-40 text-c-green"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="f-w-300">无异常</h3>
+                                    <span class="d-block text-uppercase">航行状态</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xl-8 col-md-6">
+                    <div class="card Recent-Users">
+                        <div class="card-header">
+                            <h5>驾驶员疲劳检测</h5>
+                        </div>
+                        <!-- 添加两个框，一个可以显示图片或视频，另一个显示处理后的图片或视频。再添加两个按钮，一个按钮用来给第一个框选择文件，第二个按钮用于预测 -->
+                        <div class="card-body"
+                             style="width: auto; height: auto; display: flex; justify-content: center;">
+                            <!-- 容器1：用于显示选择的图片或视频 -->
+                            <div class="file-container"
+                                 style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; margin-right: 20px; text-align: center;">
+                                <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail"
+                                     style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                                <video id="selected-video" controls
+                                       style="width: 100%; height: 100%; display: none;"></video>
+                            </div>
+                            <!-- 容器2：用于显示处理后的图片或视频 -->
+                            <div class="processed-file-container"
+                                 style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; text-align: center;">
+                                <img id="processed-image" src="#" alt="Processed Image" class="img-thumbnail"
+                                     style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                                <video id="processed-video" controls
+                                       style="width: 100%; height: 100%;"></video>
+                            </div>
+                        </div>
+                        <!-- 按钮容器 -->
+                        <form id="file-form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="button-container"
+                                 style="display: flex; justify-content: center; margin-top: 20px;">
+                                <!-- 隐藏的文件输入 -->
+                                <input type="file" id="file-input" name="file" accept="image/*,video/*"
+                                       style="display: none;">
+                                <!-- 选择文件按钮 -->
+                                <button type="button" id="select-file-button" class="btn">选择文件</button>
+                                <!-- 开始分析按钮 -->
+                                <button type="submit" id="predict-button" class="btn">开始分析</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="card card-event">
+                        <!-- Coming Event -->
+                        <div class="card-block">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col">
+                                    <h5 class="m-0">累计航程</h5>
+                                </div>
+                                <div class="col-auto">
+                                    <label class="label theme-bg2 text-white f-14 f-w-400 float-right">34%</label>
+                                </div>
+                            </div>
+                            <h2 class="mt-3 f-w-300">
+                                <span class="d-block" id="distance-span">0</span>
+                                <sub class="text-muted f-14"></sub>
+                            </h2>
+                            <h6 class="text-muted mt-4 mb-0">安全人人抓，幸福千万家。</h6>
+                            <i class="fab fa-angellist text-c-purple f-50"></i>
+                        </div>
+                    </div>
+
+                    <!-- New members registered this week -->
+                    <div class="card">
+                        <div class="card-block border-bottom">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-user f-30" style="color:coral"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="mt-2 f-w-300">
+                                        {{ new_members_thisweek }}
+                                        <sub class="text-muted f-15">
+                                            <span id="violation-count">0</span> 次疲劳
+                                        </sub>
+                                    </h3>
+                                    <span class="d-block text-uppercase">1h内</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Books lent this week -->
+                        <div class="card-block">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-auto">
+                                    <i class="fas fa-book f-30 text-c-blue"></i>
+                                </div>
+                                <div class="col">
+                                    <h3 class="mt-2 f-w-300">
+                                        {{ lent_books_thisweek }}
+                                        <sub class="text-muted f-15">
+                                            <span id="overspeed-count">0</span> 次超速
+                                        </sub>
+                                    </h3>
+                                    <span class="d-block text-uppercase">1h内</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- 添加两个框，一个可以显示图片或视频，另一个显示处理后的图片或视频。再添加两个按钮，一个按钮用来给第一个框选择文件，第二个按钮用于预测 -->
-            <div class="card-body"
-                 style="width: auto; height: auto; display: flex; justify-content: center;">
-                <!-- 容器1：用于显示选择的图片或视频 -->
-                <div class="file-container"
-                     style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; margin-right: 20px; text-align: center;">
-                    <img id="selected-image" src="#" alt="Selected Image" class="img-thumbnail"
-                         style="width: 100%; height: 100%; object-fit: contain; display: none;">
-                    <video id="selected-video" controls
-                           style="width: 100%; height: 100%; display: none;"></video>
-                </div>
-                <!-- 容器2：用于显示处理后的图片或视频 -->
-                <div class="processed-file-container"
-                     style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; text-align: center;">
-                    <img id="processed-image" src="#" alt="Processed Image" class="img-thumbnail"
-                         style="width: 100%; height: 100%; object-fit: contain; display: none;">
-                    <video id="processed-video" controls
-                           style="width: 100%; height: 100%;"></video>
-                </div>
-            </div>
-            <!-- 按钮容器 -->
-            <form id="file-form" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="button-container"
-                     style="display: flex; justify-content: center; margin-top: 20px;">
-                    <!-- 隐藏的文件输入 -->
-                    <input type="file" id="file-input" name="file" accept="image/*,video/*"
-                           style="display: none;">
-                    <!-- 选择文件按钮 -->
-                    <button type="button" id="select-file-button" class="btn">选择文件</button>
-                    <!-- 开始分析按钮 -->
-                    <button type="submit" id="predict-button" class="btn">开始分析</button>
-                </div>
-            </form>
         </div>
     </div>
     <script>
@@ -57,6 +188,9 @@
             var processedVideo = document.getElementById("processed-video");
             var fileInput = document.getElementById("file-input");
             var fileForm = document.getElementById("file-form");
+            var status = document.getElementById("status");
+            var counttxt = document.getElementById("violation-count");
+            var count = 0;
 
             // 选择文件按钮点击事件
             selectFileButton.addEventListener("click", function () {
@@ -111,6 +245,12 @@
                         } else if (data.processed_video_url) {
                             {#console.log(data.processed_video_url)#}
                             processedVideo.src = data.processed_video_url;
+                            if (data.flag)
+                            {
+                                count++;
+                                status.textContent = "疲劳驾驶";
+                                counttxt.textContent = count.toString();
+                            }
                             processedVideo.style.display = "block";
                             processedImage.style.display = "none";
                         }
@@ -121,6 +261,55 @@
             });
         });
 
+    </script>
+
+    <script>
+        var totalDistance = 0; // 累计航程
+        var intervalInSeconds = 1; // 每次更新的间隔时间（秒）
+        var overspeedCount = 0;
+        var violationCount = 0;
+
+        var currentSpeed = 14.0; // 初始化航速
+        var currentHeading = 182; // 初始化航向
+
+        // 随机生成航速的函数，确保每秒钟变化不超过0.3，且范围在13.5到15.0之间
+        function getRandomSpeed() {
+            var speedChange = (Math.random() * 0.6) - 0.3; // 生成-0.3到0.3之间的变化量
+            currentSpeed += speedChange;
+            currentSpeed = Math.max(13.5, Math.min(15.0, currentSpeed)); // 限制在13.5到15.0之间
+            return currentSpeed;
+        }
+
+        // 随机生成航向的函数，确保每秒钟变化不超过2，且范围在180到185之间
+        function getRandomHeading() {
+            var headingChange = (Math.random() * 4) - 2; // 生成-2到2之间的变化量
+            currentHeading += headingChange;
+            currentHeading = Math.max(180, Math.min(185, currentHeading)); // 限制在180到185之间
+            return Math.floor(currentHeading);
+        }
+
+        // 更新航速、航向和累计航程的函数
+        function updateSpeedAndDistance() {
+            var speed = getRandomSpeed();
+            var heading = getRandomHeading();
+            totalDistance += speed * (intervalInSeconds / 3600); // 将速度转换为小时单位后累加到总距离
+
+            document.getElementById("speed-heading").innerText = speed.toFixed(1) + " 节";
+            document.getElementById("heading-span").innerText = heading + " °";
+            document.getElementById("distance-span").innerText = totalDistance.toFixed(2) + " 海里";
+            if (speed >= 100) {
+                violationCount++;
+                overspeedCount++;
+                document.getElementById("violation-count").innerText = violationCount;
+                document.getElementById("overspeed-count").innerText = overspeedCount;
+            }
+        }
+
+        // 每隔 intervalInSeconds 秒更新一次数据
+        setInterval(updateSpeedAndDistance, intervalInSeconds * 1000);
+
+        // 初始调用一次以立即显示数据
+        updateSpeedAndDistance();
     </script>
 
 {% endblock content %}
