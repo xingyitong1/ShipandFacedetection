@@ -22,6 +22,7 @@
                     <video id="selected-video" controls
                            style="width: 100%; height: 100%; display: none;"></video>
                 </div>
+                
                 <!-- 容器2：用于显示处理后的图片或视频 -->
                 <div class="processed-file-container"
                      style="display: inline-block; width: 400px; height: 300px; border: 1px solid #ddd; text-align: center;">
@@ -39,14 +40,25 @@
                     <!-- 隐藏的文件输入 -->
                     <input type="file" id="file-input" name="file" accept="image/*,video/*"
                            style="display: none;">
+                    <button type="button" id="open-camera" class="btn">打开摄像头</button>
                     <!-- 选择文件按钮 -->
-                    <button type="button" id="select-file-button" class="btn">选择文件</button>
+                    <button type="button" id="select-file-button" class="btn">开始分析</button>
                     <!-- 开始分析按钮 -->
-                    <button type="submit" id="predict-button" class="btn">开始分析</button>
+                    <button type="submit" id="predict-button" class="btn">结束分析</button>
                 </div>
             </form>
         </div>
     </div>
+    <script>
+                    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+                        .then(function (stream) {
+                            const videoElement = document.getElementById('open-camera');
+                            videoElement.srcObject = stream;
+                        })
+                        .catch(function (err) {
+                            // 处理错误
+                        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var selectFileButton = document.getElementById("select-file-button");
