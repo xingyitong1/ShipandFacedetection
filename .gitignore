@@ -28,3 +28,6 @@ staticfiles/*
 
 */migrations
 *.sqlite3
+/media
+/testdata
+/media
